@@ -1,0 +1,13 @@
+mat-sidenav-container {
+  height: 100vh;
+}
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+.link-active {
+  color: red;
+  .mat-list-icon {
+    text-decoration: none;
+  }
+}
