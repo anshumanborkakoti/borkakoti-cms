@@ -5,12 +5,41 @@ import {
   MatListModule,
   MatToolbarModule,
   MatIconModule,
-  MatTableModule
+  MatExpansionModule,
+  MatGridListModule,
+  MatButtonModule,
+  MatInputModule,
+  MatFormFieldModule,
+  MatSelectModule
 } from '@angular/material';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, MatSidenavModule, MatListModule, MatToolbarModule, MatIconModule, MatTableModule],
-  exports: [MatSidenavModule, MatListModule, MatToolbarModule, MatIconModule, MatTableModule]
+  imports: [
+    CommonModule,
+    MatSidenavModule,
+    MatListModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatGridListModule,
+    MatExpansionModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
+  ],
+  exports: [
+    CommonModule,
+    MatSidenavModule,
+    MatListModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatGridListModule,
+    MatExpansionModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
+  ]
 })
 export class AppMaterialModuleModule { }

@@ -1,0 +1,17 @@
+form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(20px, max-content));
+  grid-auto-columns: minmax(20px, max-content);
+  grid-auto-flow: row;
+  row-gap: 20px;
+  column-gap: 30px;
+  widows: 95vw;
+  height: 100vh;
+  margin: auto;
+  justify-content: space-evenly;
+  align-content: space-evenly;
+}
+
+h3 {
+  text-align: center;
+}

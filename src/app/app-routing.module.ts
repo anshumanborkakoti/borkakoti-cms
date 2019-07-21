@@ -4,6 +4,7 @@ import { PostsListComponent } from './pages/posts/posts-list/posts-list.componen
 import { IssuesListComponent } from './pages/issues/issues-list/issues-list.component';
 import { CategoriesListComponent } from './pages/categories/categories-list/categories-list.component';
 import { UsersListComponent } from './pages/users/users-list/users-list.component';
+import { UsersDetailComponent } from './pages/users/users-detail/users-detail.component';
 
 const routes: Routes = [
   {
@@ -12,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: 'issues',
-    component: IssuesListComponent
+    component: IssuesListComponent,
   },
   {
     path: 'categories',
@@ -23,8 +24,16 @@ const routes: Routes = [
     component: UsersListComponent
   },
   {
-    path: '',
-    component: UsersListComponent
+    path: 'users/detail',
+    component: UsersDetailComponent
+  },
+  {
+    path: 'users/detail/:userid',
+    component: UsersDetailComponent
+  },
+  {
+    path: '**',
+    redirectTo: '/users'
   }
 ];
 

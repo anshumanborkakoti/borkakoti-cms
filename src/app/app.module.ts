@@ -10,6 +10,7 @@ import { PostsModule } from './pages/posts/posts.module';
 import { IssuesModule } from './pages/issues/issues.module';
 import { CategoriesModule } from './pages/categories/categories.module';
 import { UsersModule } from './pages/users/users.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,9 +22,9 @@ import { UsersModule } from './pages/users/users.module';
     PostsModule,
     IssuesModule,
     CategoriesModule,
-    UsersModule
+    UsersModule,
+    FormsModule
   ],
-  providers: [{ provide: APP_BASE_HREF, useValue: '/' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

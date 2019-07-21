@@ -1,28 +1,38 @@
-<table mat-table [dataSource]="usersList">
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let user">{{ user.name }}</td>
-  </ng-container>
-  <ng-container matColumnDef="username">
-    <th mat-header-cell *matHeaderCellDef>Username</th>
-    <td mat-cell *matCellDef="let user">{{ user.username }}</td>
-  </ng-container>
-  <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef>Email</th>
-    <td mat-cell *matCellDef="let user">{{ user.email }}</td>
-  </ng-container>
-  <ng-container matColumnDef="address">
-    <th mat-header-cell *matHeaderCellDef>Address</th>
-    <td mat-cell *matCellDef="let user">{{ user.address }}</td>
-  </ng-container>
-  <ng-container matColumnDef="roles">
-    <th mat-header-cell *matHeaderCellDef>Roles</th>
-    <td mat-cell *matCellDef="let user">
-      <mat-list *ngFor="let role of user.roles" dense>
-        {{ role }}
-      </mat-list>
-    </td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-  <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
-</table>
+<button
+  mat-raised-button
+  color="primary"
+  routerLink="detail"
+  type="button"
+  id="addUser"
+>
+  Add User
+</button>
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let user of usersList; let i = index">
+    <mat-expansion-panel-header>
+      {{ i + 1 }}. {{ user.name }}
+    </mat-expansion-panel-header>
+    <mat-grid-list cols="3" rowHeight="50px">
+      <mat-grid-tile> Name: {{ user.name }} </mat-grid-tile>
+      <mat-grid-tile>Email: {{ user.email }}</mat-grid-tile>
+      <mat-grid-tile>Username: {{ user.username }}</mat-grid-tile>
+      <mat-grid-tile>Address: {{ user.address }}</mat-grid-tile>
+      <mat-grid-tile>
+        Roles:
+        <mat-list *ngFor="let role of user.roles" dense role="list">
+          <mat-list-item>{{ role }}</mat-list-item>
+        </mat-list>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <mat-action-row>
+      <button
+        mat-raised-button
+        color="accent"
+        [routerLink]="['detail', user.id]"
+        type="button"
+      >
+        Edit
+      </button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>

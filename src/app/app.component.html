@@ -9,7 +9,6 @@
         *ngFor="let item of menuItems"
         [routerLink]="item.routerLink"
         routerLinkActive="link-active"
-        [routerLinkActiveOptions]="{ exact: true }"
       >
         <mat-icon matListIcon>{{ item.icon }}</mat-icon>
         {{ item.label }}
