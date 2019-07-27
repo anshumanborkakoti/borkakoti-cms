@@ -1,21 +1,24 @@
-import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked, AfterContentInit, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UsersService } from '../users.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-users-detail',
   templateUrl: './users-detail.component.html',
   styleUrls: ['./users-detail.component.scss']
 })
-export class UsersDetailComponent implements OnInit {
+export class UsersDetailComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('f', { static: true }) detailForm: NgForm;
   roles: string[];
   private user: User;
+  private savedSub: Subscription;
+  isSaving = false;
 
-  constructor(private userService: UsersService, private activatedRoute: ActivatedRoute) { }
+  constructor(private userService: UsersService, private activatedRoute: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.roles = this.userService.getRoles();
@@ -24,6 +27,18 @@ export class UsersDetailComponent implements OnInit {
     if (!this.user) {
       this.user = new User();
     }
+    this.savedSub = this.userService.getIsSavedObservable().subscribe(asaved => {
+      this.isSaving = false;
+
+      // When saved, navigate
+      if (asaved === true) {
+        this.router.navigate(['/users']);
+      }
+
+    });
+  }
+
+  ngAfterViewInit(): void {
     setTimeout(() => {
       this.detailForm.form.setValue({
         name: this.user.name,
@@ -35,6 +50,7 @@ export class UsersDetailComponent implements OnInit {
       });
     }, 100);
   }
+
   save() {
     if (!this.detailForm.valid) {
       return;
@@ -50,6 +66,12 @@ export class UsersDetailComponent implements OnInit {
         value.address,
         value.roles
       ));
+    this.isSaving = true;
+
+  }
+
+  ngOnDestroy(): void {
+    this.savedSub.unsubscribe();
   }
 
 }

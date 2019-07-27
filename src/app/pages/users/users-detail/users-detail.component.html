@@ -1,5 +1,5 @@
 <h3>Please enter user details</h3>
-
+<mat-spinner *ngIf="isSaving"></mat-spinner>
 <form #f="ngForm">
   <mat-form-field>
     <input
@@ -67,9 +67,8 @@
   <button
     mat-raised-button
     color="primary"
-    routerLink="/users"
     type="button"
-    [disabled]="!f.valid"
+    [disabled]="!f.valid || f.pristine || f.untouched"
     (click)="save()"
   >
     Save

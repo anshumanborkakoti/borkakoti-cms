@@ -7,7 +7,8 @@
 >
   Add User
 </button>
-<mat-accordion>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion *ngIf="!isLoading">
   <mat-expansion-panel *ngFor="let user of usersList; let i = index">
     <mat-expansion-panel-header>
       {{ i + 1 }}. {{ user.name }}
@@ -33,6 +34,17 @@
       >
         Edit
       </button>
+      <button
+        mat-raised-button
+        color="warn"
+        type="button"
+        (click)="deleteUser(user.id)"
+      >
+        Delete
+      </button>
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
+<div class="no-user-message" *ngIf="usersList.length === 0 && !isLoading">
+  No Users to display!
+</div>

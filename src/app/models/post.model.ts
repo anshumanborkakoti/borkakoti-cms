@@ -5,7 +5,8 @@ import { Category } from './category.model';
 import { Issue } from './issue.model';
 
 export class Post {
-  constructor(public authors: string[],
+  constructor(
+    public authors: string[],
     public editHistory: Edit[],
     public archived: boolean,
     public published: boolean,

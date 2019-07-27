@@ -8,25 +8,25 @@ export class SideNavMenuService {
     {
       label: 'Users',
       routerLink: 'users',
-      icon: 'home',
+      icon: 'person',
       authRoles: ['admin']
     },
     {
       label: 'Issues',
       routerLink: 'issues',
-      icon: 'folder',
+      icon: 'book',
       authRoles: ['Chief editor', 'admin']
     },
     {
       label: 'Categories',
       routerLink: 'categories',
-      icon: 'folder',
+      icon: 'label',
       authRoles: ['Chief editor', 'admin']
     },
     {
       label: 'Posts',
       routerLink: 'posts',
-      icon: 'folder',
+      icon: 'notes',
       authRoles: ['Chief editor', 'admin', 'editor']
     },
   ];

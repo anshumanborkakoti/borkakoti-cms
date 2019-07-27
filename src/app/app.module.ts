@@ -5,12 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMaterialModuleModule } from './app-material-module/app-material-module.module';
-import { APP_BASE_HREF } from '@angular/common';
 import { PostsModule } from './pages/posts/posts.module';
 import { IssuesModule } from './pages/issues/issues.module';
 import { CategoriesModule } from './pages/categories/categories.module';
-import { UsersModule } from './pages/users/users.module';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,8 +21,8 @@ import { FormsModule } from '@angular/forms';
     PostsModule,
     IssuesModule,
     CategoriesModule,
-    UsersModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   bootstrap: [AppComponent]
 })

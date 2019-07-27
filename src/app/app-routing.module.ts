@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { PostsListComponent } from './pages/posts/posts-list/posts-list.component';
 import { IssuesListComponent } from './pages/issues/issues-list/issues-list.component';
 import { CategoriesListComponent } from './pages/categories/categories-list/categories-list.component';
-import { UsersListComponent } from './pages/users/users-list/users-list.component';
-import { UsersDetailComponent } from './pages/users/users-detail/users-detail.component';
 
 const routes: Routes = [
   {
@@ -21,15 +19,7 @@ const routes: Routes = [
   },
   {
     path: 'users',
-    component: UsersListComponent
-  },
-  {
-    path: 'users/detail',
-    component: UsersDetailComponent
-  },
-  {
-    path: 'users/detail/:userid',
-    component: UsersDetailComponent
+    loadChildren: () => import('./pages/users/users.module').then(m => m.UsersModule)
   },
   {
     path: '**',
@@ -38,7 +28,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
