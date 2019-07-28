@@ -1,11 +1,12 @@
 <button
-  mat-raised-button
-  color="primary"
+  mat-icon-button
   routerLink="detail"
   type="button"
   id="addUser"
+  color="primary"
 >
-  Add User
+  Add user
+  <mat-icon>add</mat-icon>
 </button>
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <mat-accordion *ngIf="!isLoading">

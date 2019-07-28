@@ -15,7 +15,8 @@ export class Post {
     public approved: boolean,
     public categories: Category[],
     public issues: Issue[],
-    public label: string) {
+    public label: string,
+    public id: string) {
 
   }
 }

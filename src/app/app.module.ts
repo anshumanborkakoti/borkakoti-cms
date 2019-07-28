@@ -18,7 +18,6 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     AppMaterialModuleModule,
-    PostsModule,
     IssuesModule,
     CategoriesModule,
     FormsModule,

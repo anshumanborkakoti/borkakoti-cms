@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
-import { PostsListComponent } from './pages/posts/posts-list/posts-list.component';
 import { IssuesListComponent } from './pages/issues/issues-list/issues-list.component';
 import { CategoriesListComponent } from './pages/categories/categories-list/categories-list.component';
 
 const routes: Routes = [
   {
     path: 'posts',
-    component: PostsListComponent
+    loadChildren: () => import('./pages/posts/posts.module').then(m => m.PostsModule)
   },
   {
     path: 'issues',
