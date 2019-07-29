@@ -20,7 +20,6 @@ import { HttpClientModule } from '@angular/common/http';
     AppMaterialModuleModule,
     IssuesModule,
     CategoriesModule,
-    FormsModule,
     HttpClientModule
   ],
   bootstrap: [AppComponent]

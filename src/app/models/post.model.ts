@@ -6,17 +6,17 @@ import { Issue } from './issue.model';
 
 export class Post {
   constructor(
-    public authors: string[],
-    public editHistory: Edit[],
-    public archived: boolean,
-    public published: boolean,
-    public thumbnail: Thumbnail,
-    public detail: PostDetail,
-    public approved: boolean,
-    public categories: Category[],
-    public issues: Issue[],
-    public label: string,
-    public id: string) {
+    public authors: string[] = [],
+    public editHistory: Edit[] = [],
+    public archived: boolean = false,
+    public published: boolean = false,
+    public thumbnail: Thumbnail = new Thumbnail(),
+    public detail: PostDetail = new PostDetail(),
+    public approved: boolean = false,
+    public categories: Category[] = [],
+    public issues: Issue[] = [],
+    public label: string = '',
+    public id: string = '') {
 
   }
 }

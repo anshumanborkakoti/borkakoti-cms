@@ -1,1 +1,72 @@
-<p>posts-detail works!</p>
+<form [formGroup]="postForm">
+  <div class="layout">
+    <span>
+      <mat-form-field>
+        <input
+          type="text"
+          formControlName="label"
+          matInput
+          placeholder="Post name"
+          required
+          [errorStateMatcher]="myErrorStateMatcher"
+        />
+        <mat-error>Please enter a name for the post</mat-error>
+      </mat-form-field>
+    </span>
+    <div class="mat-form-field-wrapper">
+      <mat-checkbox formControlName="published" labelPosition="after">
+        Published
+      </mat-checkbox>
+    </div>
+    <div class="mat-form-field-wrapper">
+      <mat-checkbox formControlName="approved" labelPosition="after">
+        Approved
+      </mat-checkbox>
+    </div>
+    <div class="mat-form-field-wrapper">
+      <mat-checkbox formControlName="archived" labelPosition="after">
+        Archived
+      </mat-checkbox>
+    </div>
+    <mat-form-field>
+      <mat-label>Categories</mat-label>
+      <mat-select
+        multiple
+        formControlName="categories"
+        [errorStateMatcher]="myErrorStateMatcher"
+        required
+      >
+        <mat-option
+          *ngFor="let category of post.categories"
+          [value]="category.id"
+        >
+          {{ category.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Please select at least one category</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Issues</mat-label>
+      <mat-select multiple formControlName="issues">
+        <mat-option *ngFor="let issue of post.issues" [value]="issue.id">
+          {{ issue.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea
+        matInput
+        formControlName="authors"
+        placeholder="Comma separated list of authors"
+        required
+        [errorStateMatcher]="myErrorStateMatcher"
+      ></textarea>
+      <mat-error>Please enter provide at least one author</mat-error>
+    </mat-form-field>
+  </div>
+  <mat-divider></mat-divider>
+  <h3>Thumbnail</h3>
+  <button type="button" color="accent" (click)="savePost()" mat-raised-button>
+    Save
+  </button>
+</form>

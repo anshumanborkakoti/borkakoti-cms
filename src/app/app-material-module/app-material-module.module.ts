@@ -15,8 +15,11 @@ import {
   MatTableModule,
   MatPaginatorModule,
   MatSortModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatTooltipModule,
+  MatDividerModule
 } from '@angular/material';
+import { MyErrorStateMatcher } from './error-state-matcher';
 
 @NgModule({
   declarations: [],
@@ -36,7 +39,9 @@ import {
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule,
+    MatDividerModule
   ],
   exports: [
     CommonModule,
@@ -54,7 +59,9 @@ import {
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule,
+    MatDividerModule
   ]
 })
 export class AppMaterialModuleModule { }

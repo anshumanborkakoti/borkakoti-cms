@@ -7,7 +7,7 @@
         placeholder="Filter"
       />
     </mat-form-field>
-    <span class="example-fill-remaining-space"></span>
+    <span class="fill-remaining-space"></span>
     <button
       mat-icon-button
       type="button"
@@ -15,6 +15,7 @@
       color="primary"
       aria-label="add a post"
       routerLink="detail"
+      matTooltip="Add a post"
     >
       <mat-icon>add</mat-icon>
     </button>
@@ -26,6 +27,7 @@
       color="primary"
       aria-label="delete selected posts"
       (click)="deleteSelectedPosts()"
+      matTooltip="Delete selected posts"
     >
       <mat-icon>delete</mat-icon>
     </button>
@@ -40,6 +42,7 @@
         [checked]="selection.hasValue() && isAllSelected()"
         [indeterminate]="selection.hasValue() && !isAllSelected()"
         #masterCheckbox
+        matTooltip="Select all"
       >
       </mat-checkbox>
     </th>
@@ -48,6 +51,7 @@
         (click)="$event.stopPropagation()"
         (change)="$event ? selection.toggle(post) : null"
         [checked]="selection.isSelected(post)"
+        matTooltip="Select post"
       >
       </mat-checkbox>
     </td>
@@ -105,7 +109,7 @@
         type="button"
         color="accent"
         aria-label="edit post"
-        alt="edit post"
+        matTooltip="Edit post"
         [routerLink]="['detail', post.id]"
       >
         <mat-icon>create</mat-icon>
@@ -116,7 +120,7 @@
         color="warn"
         aria-label="delete post"
         (click)="deletePost(post.id)"
-        alt="delete post"
+        matTooltip="Delete post"
       >
         <mat-icon>clear</mat-icon>
       </button>

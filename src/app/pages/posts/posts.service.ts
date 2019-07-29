@@ -2,23 +2,21 @@ import { Injectable } from '@angular/core';
 import { Post } from 'src/app/models/post.model';
 import { PostDetail } from 'src/app/models/post-detail.model';
 import { Category } from 'src/app/models/category.model';
-import { MatTableDataSource } from '@angular/material';
 import { Issue } from 'src/app/models/issue.model';
-import { post } from 'selenium-webdriver/http';
 import { BehaviorSubject } from 'rxjs';
 
 const categories: Category[] = [
-  new Category('Category 1', '', 'Category 1 label'),
-  new Category('Category 2', '', 'Category 2 label'),
-  new Category('Category 3', '', 'Category 3 label'),
-  new Category('Category 4', '', 'Category 4 label')
+  new Category('Category 1', '454554', 'Category 1 label'),
+  new Category('Category 2', '435', 'Category 2 label'),
+  new Category('Category 3', '23232', 'Category 3 label'),
+  new Category('Category 4', '7889879', 'Category 4 label')
 ];
 
 const issues: Issue[] = [
-  new Issue('April 2019', '', 'April 2019', null, true, false),
-  new Issue('May 2019', '', 'May 2019', null, true, false),
-  new Issue('June 2019', '', 'June 2019', null, true, false),
-  new Issue('Dec 2019', '', 'Dec 2019', null, true, false),
+  new Issue('April 2019', '45435432', 'April 2019', null, true, false),
+  new Issue('May 2019', '2312321323', 'May 2019', null, true, false),
+  new Issue('June 2019', '9879879', 'June 2019', null, true, false),
+  new Issue('Dec 2019', '6765765', 'Dec 2019', null, true, false),
 ]
 
 let posts: Post[] = [
@@ -190,5 +188,11 @@ export class PostService {
       return !postIds.some(id => aPost.id === id);
     });
     this.postsObservable.next(posts.slice());
+  }
+
+  getPost(postid: string) {
+    return posts.find(aPost => {
+      return aPost.id === postid;
+    });
   }
 }
