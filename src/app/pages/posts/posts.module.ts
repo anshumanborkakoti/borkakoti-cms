@@ -5,6 +5,7 @@ import { PostsDetailComponent } from './posts-detail/posts-detail.component';
 import { AppMaterialModuleModule } from 'src/app/app-material-module/app-material-module.module';
 import { Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ThumbnailModule } from 'src/app/common/components/thumbnail/thumbnail.module';
 
 const routes: Routes = [
   {
@@ -27,7 +28,8 @@ const routes: Routes = [
     CommonModule,
     ReactiveFormsModule,
     AppMaterialModuleModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ThumbnailModule
   ],
   exports: [RouterModule]
 })

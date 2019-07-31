@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Post } from 'src/app/models/post.model';
 import { PostService } from '../posts.service';
@@ -6,17 +6,19 @@ import { ActivatedRoute } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { Issue } from 'src/app/models/issue.model';
 import { MyErrorStateMatcher } from 'src/app/app-material-module/error-state-matcher';
+import { Thumbnail } from 'src/app/models/thumbnail.model';
+
+
 
 @Component({
   selector: 'app-posts-detail',
   templateUrl: './posts-detail.component.html',
   styleUrls: ['./posts-detail.component.scss']
 })
-export class PostsDetailComponent implements OnInit {
+export class PostsDetailComponent implements OnInit, AfterContentInit {
   postForm: FormGroup;
   post: Post;
   myErrorStateMatcher = new MyErrorStateMatcher();
-
   constructor(private postService: PostService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
@@ -46,8 +48,16 @@ export class PostsDetailComponent implements OnInit {
     });
   }
 
-  savePost() {
-    console.log(this.postForm);
+  ngAfterContentInit(): void {
+
   }
 
+  savePost() {
+    console.log(this.postForm);
+    console.log(this.post.thumbnail);
+  }
+  onThumbnailChanged(aThumbnail: any) {
+    this.post.thumbnail = aThumbnail;
+    console.log(aThumbnail);
+  }
 }

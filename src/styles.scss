@@ -17,3 +17,8 @@ mat-spinner {
      Every toolbar row uses a flexbox row layout. */
   flex: 1 1 auto;
 }
+
+.ck-editor__editable_inline {
+  max-height: 90%;
+  max-width: 100%;
+}
