@@ -1,0 +1,6 @@
+<button type="button" mat-icon-button *ngIf='!isEditMode' (click)='openDialog()' matTooltip="Add">
+  <mat-icon>add</mat-icon>
+</button>
+<button type="button" mat-icon-button *ngIf='isEditMode' (click)='openDialog()' matTooltip="Edit">
+  <mat-icon>edit</mat-icon>
+</button>

@@ -10,13 +10,12 @@ export class Post {
     public editHistory: Edit[] = [],
     public archived: boolean = false,
     public published: boolean = false,
-    public thumbnail: Thumbnail = new Thumbnail(),
-    public detail: PostDetail = new PostDetail(),
+    public thumbnail: Thumbnail = null,
+    public detail: PostDetail[] = [],
     public approved: boolean = false,
     public categories: Category[] = [],
     public issues: Issue[] = [],
     public label: string = '',
     public id: string = '') {
-
   }
 }

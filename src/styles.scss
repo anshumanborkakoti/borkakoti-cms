@@ -1,11 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Prata&display=swap');
 html,
 body {
   height: 100%;
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 mat-spinner {
   position: absolute;
@@ -18,7 +20,8 @@ mat-spinner {
   flex: 1 1 auto;
 }
 
-.ck-editor__editable_inline {
-  max-height: 90%;
-  max-width: 100%;
+.fr-box.fr-basic .fr-element {
+  font-family: 'Prata', 'Roboto Slab', 'Helvetica', 'Times New Roman', 'Times', serif;
+  font-size: 15px;
+  line-height: 150%;
 }

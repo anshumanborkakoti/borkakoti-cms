@@ -6,6 +6,7 @@ import { AppMaterialModuleModule } from 'src/app/app-material-module/app-materia
 import { Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ThumbnailModule } from 'src/app/common/components/thumbnail/thumbnail.module';
+import { CloudinaryModule } from '@cloudinary/angular-5.x';
 
 const routes: Routes = [
   {
@@ -27,6 +28,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    CloudinaryModule,
     AppMaterialModuleModule,
     RouterModule.forChild(routes),
     ThumbnailModule

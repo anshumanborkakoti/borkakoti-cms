@@ -1,67 +1,34 @@
-<form [formGroup]="thumbnailForm">
-  <fieldset class="thumbnail-container">
-    <legend>{{ name }}</legend>
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="thumbnailForm">
     <fieldset class="thumbnail-container">
       <legend>Header</legend>
       <mat-form-field>
-        <input
-          type="text"
-          matInput
-          formControlName="header"
-          required
-          placeholder="Header"
-          [errorStateMatcher]="thumbnailErrorStateMatcher"
-        />
+        <input type="text" matInput formControlName="header" required placeholder="Header"
+          [errorStateMatcher]="thumbnailErrorStateMatcher" />
         <mat-error *ngIf="showErrorIf('header', 'required')">
           Must enter a header!
         </mat-error>
         <mat-error *ngIf="showErrorIf('header', 'maxlength')">
           The header must be of a maximum of
-          {{ thumbnailForm.get('header').errors['maxlength'].requiredLength }}
-          characters</mat-error
-        >
+          {{ thumbnailForm.get("header").errors["maxlength"].requiredLength }}
+          characters</mat-error>
       </mat-form-field>
     </fieldset>
 
     <fieldset class="thumbnail-container">
       <legend>Image *</legend>
-      <button
-        type="button"
-        mat-raised-button
-        color="primary"
-        (click)="showMl()"
-      >
+      <button type="button" mat-raised-button color="primary" (click)="showMl()">
         Select an image
       </button>
       <div class="selected-images">
-        <input
-          type="text"
-          formControlName="image"
-          [errorStateMatcher]="thumbnailErrorStateMatcher"
-          matInput
-          style="display:none"
-        />
-        <mat-error *ngIf="thumbnail.image === null"
-          >Please provide an image!</mat-error
-        >
-        <div
-          class="thumbnail"
-          *ngIf="thumbnail.image !== null && thumbnail.image.publicId !== null"
-        >
-          <cl-image
-            [public-id]="thumbnail.image.publicId"
-            quality="auto"
-            dpr="auto"
-            crop="scale"
-            width="auto"
-            height="200"
-            client_hints="true"
-            responsive
-          >
-            <cl-transformation
-              fetch-format="auto"
-              type="fetch"
-            ></cl-transformation>
+        <input type="text" formControlName="image" [errorStateMatcher]="thumbnailErrorStateMatcher" matInput
+          style="display:none" />
+        <mat-error *ngIf="thumbnail.image === null">Please provide an image!</mat-error>
+        <div class="thumbnail" *ngIf="thumbnail.image !== null && thumbnail.image.publicId !== null">
+          <cl-image [public-id]="thumbnail.image.publicId" quality="auto" dpr="auto" crop="scale" width="auto"
+            height="200" client_hints="true" responsive>
+            <cl-transformation fetch-format="auto" type="fetch"></cl-transformation>
           </cl-image>
         </div>
       </div>
@@ -69,38 +36,33 @@
     <fieldset class="caption-container">
       <legend>Caption</legend>
       <mat-form-field>
-        <input
-          type="text"
-          matInput
-          formControlName="caption"
-          placeholder="Caption"
-          [errorStateMatcher]="thumbnailErrorStateMatcher"
-        />
+        <input type="text" matInput formControlName="caption" placeholder="Caption"
+          [errorStateMatcher]="thumbnailErrorStateMatcher" />
         <mat-error *ngIf="showErrorIf('caption', 'maxlength')">
           The caption must be of a maximum of
-          {{ thumbnailForm.get('caption').errors['maxlength'].requiredLength }}
-          characters</mat-error
-        >
+          {{ thumbnailForm.get("caption").errors["maxlength"].requiredLength }}
+          characters</mat-error>
       </mat-form-field>
     </fieldset>
     <fieldset class="content-container">
       <legend>Content</legend>
+      <textarea [froalaEditor]="froalaOptions" formControlName="content" #froalaEditor></textarea>
     </fieldset>
     <fieldset class="footer-container">
+      <legend>Footer</legend>
       <mat-form-field>
-        <input
-          type="text"
-          matInput
-          formControlName="footer"
-          placeholder="Footer"
-          [errorStateMatcher]="thumbnailErrorStateMatcher"
-        />
+        <input type="text" matInput formControlName="footer" placeholder="Footer"
+          [errorStateMatcher]="thumbnailErrorStateMatcher" />
         <mat-error *ngIf="showErrorIf('footer', 'maxlength')">
           The footer must be of a maximum of
-          {{ thumbnailForm.get('footer').errors['maxlength'].requiredLength }}
-          characters</mat-error
-        >
+          {{ thumbnailForm.get("footer").errors["maxlength"].requiredLength }}
+          characters</mat-error>
       </mat-form-field>
     </fieldset>
-  </fieldset>
-</form>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button color="accent" [disabled]="!thumbnailForm.valid" (click)="saveData()">Save</button>
+  <mat-divider [vertical]="true" [inset]='true'></mat-divider>
+  <button mat-button mat-dialog-close color="warn">Cancel</button>
+</mat-dialog-actions>

@@ -7,6 +7,7 @@ import { Category } from 'src/app/models/category.model';
 import { Issue } from 'src/app/models/issue.model';
 import { MyErrorStateMatcher } from 'src/app/app-material-module/error-state-matcher';
 import { Thumbnail } from 'src/app/models/thumbnail.model';
+import { PostDetail } from 'src/app/models/post-detail.model';
 
 
 
@@ -52,12 +53,14 @@ export class PostsDetailComponent implements OnInit, AfterContentInit {
 
   }
 
+  onThumbnailSaved(data: Thumbnail | PostDetail) {
+    console.log('Thumbnail saved');
+    console.log(data);
+    this.post.thumbnail = data;
+  }
+
   savePost() {
     console.log(this.postForm);
     console.log(this.post.thumbnail);
-  }
-  onThumbnailChanged(aThumbnail: any) {
-    this.post.thumbnail = aThumbnail;
-    console.log(aThumbnail);
   }
 }

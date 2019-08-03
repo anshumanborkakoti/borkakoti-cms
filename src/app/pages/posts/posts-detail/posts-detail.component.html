@@ -2,14 +2,8 @@
   <div class="layout">
     <span>
       <mat-form-field>
-        <input
-          type="text"
-          formControlName="label"
-          matInput
-          placeholder="Post name"
-          required
-          [errorStateMatcher]="myErrorStateMatcher"
-        />
+        <input type="text" formControlName="label" matInput placeholder="Post name" required
+          [errorStateMatcher]="myErrorStateMatcher" />
         <mat-error>Please enter a name for the post</mat-error>
       </mat-form-field>
     </span>
@@ -30,16 +24,8 @@
     </div>
     <mat-form-field>
       <mat-label>Categories</mat-label>
-      <mat-select
-        multiple
-        formControlName="categories"
-        [errorStateMatcher]="myErrorStateMatcher"
-        required
-      >
-        <mat-option
-          *ngFor="let category of post.categories"
-          [value]="category.id"
-        >
+      <mat-select multiple formControlName="categories" [errorStateMatcher]="myErrorStateMatcher" required>
+        <mat-option *ngFor="let category of post.categories" [value]="category.id">
           {{ category.label }}
         </mat-option>
       </mat-select>
@@ -54,23 +40,35 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field>
-      <textarea
-        matInput
-        formControlName="authors"
-        placeholder="Comma separated list of authors"
-        required
-        [errorStateMatcher]="myErrorStateMatcher"
-      ></textarea>
+      <textarea matInput formControlName="authors" placeholder="Comma separated list of authors" required
+        [errorStateMatcher]="myErrorStateMatcher"></textarea>
       <mat-error>Please enter provide at least one author</mat-error>
     </mat-form-field>
   </div>
   <mat-divider></mat-divider>
-  <app-thumbnail
-    [thumbnail]="post.thumbnail"
-    name="Thumbnail for the post"
-    (thumbnailChanged)="onThumbnailChanged($event)"
-  ></app-thumbnail>
-
+  <mat-toolbar>
+    <span class="fill-remaining-space">Thumbnail</span>
+    <app-thumbnail-dialog contentMode='THUMBNAIL' mode='ADD' [thumbnail]='post.thumbnail'
+      (thumbnailSaved)='onThumbnailSaved($event)' *ngIf="post.thumbnail === null"></app-thumbnail-dialog>
+  </mat-toolbar>
+  <mat-divider></mat-divider>
+  <h3 *ngIf="post.thumbnail === null">No Thumbnails</h3>
+  <div class="thumbnail-container" *ngIf="post.thumbnail !== null">
+    <mat-card>
+      <mat-card-actions align="end">
+        <app-thumbnail-dialog contentMode='THUMBNAIL' mode='EDIT' [thumbnail]='post.thumbnail'
+          (thumbnailSaved)='onThumbnailSaved($event)'></app-thumbnail-dialog>
+        <button type="button" mat-icon-button matTooltip="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+      <mat-card-title> {{ post.thumbnail.header}} </mat-card-title>
+      <img mat-card-image [clSrc]="post.thumbnail.image.secureUrl" fetch-format="auto" quality="auto" type="fetch" />
+      <mat-card-subtitle> {{ post.thumbnail.caption}}</mat-card-subtitle>
+      <mat-card-content>{{ post.thumbnail.content}} </mat-card-content>
+      <mat-card-footer>{{ post.thumbnail.footer}}</mat-card-footer>
+    </mat-card>
+  </div>
   <button type="button" color="accent" (click)="savePost()" mat-raised-button>
     Save
   </button>

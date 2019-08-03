@@ -1,6 +1,7 @@
 import { Thumbnail } from './thumbnail.model';
 
-export class PostDetail {
-  constructor(public details: Thumbnail[] = null) {
+export class PostDetail extends Thumbnail {
+  public get maxCharCount() {
+    return 5000;
   }
 }

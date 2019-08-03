@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, Output } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy, Output, Inject, ViewChild } from '@angular/core';
 import { Thumbnail } from 'src/app/models/thumbnail.model';
 import { Image } from 'src/app/models/image.model';
 import { environment } from 'src/environments/environment';
@@ -6,28 +6,39 @@ import { WindowRef } from '../../services/window.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MyErrorStateMatcher } from 'src/app/app-material-module/error-state-matcher';
 import { EventEmitter } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { FROALA_EDITOR_OPTIONS } from '../../froala-editor/options.froala';
+import { PostDetail } from 'src/app/models/post-detail.model';
+
+export const CONTENT_COMPONENT_MODES = {
+  postDetail: 'POST_DETAIL',
+  thumbnail: 'THUMBNAIL'
+};
 
 @Component({
   selector: 'app-thumbnail',
   templateUrl: './thumbnail.component.html',
-  styleUrls: ['./thumbnail.component.scss']
+  styleUrls: [
+    './thumbnail.component.scss'
+  ]
 })
 export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() thumbnail: Thumbnail;
-  @Input() name: string;
-  @Output() thumbnailChanged = new EventEmitter<Thumbnail>();
+  @Input() thumbnail: Thumbnail | PostDetail;
+  @Input() mode: string = CONTENT_COMPONENT_MODES.thumbnail;
+  @Output() thumbnailSaved = new EventEmitter<Thumbnail | PostDetail>();
+
+  @ViewChild('froalaEditor', { static: true }) editor: any;
 
   clImages: Image[];
   mediaLibrary: any;
   thumbnailForm: FormGroup;
   thumbnailErrorStateMatcher = new MyErrorStateMatcher();
-  statusChangeSubs: Subscription;
+  froalaOptions = FROALA_EDITOR_OPTIONS;
 
   constructor(private window: WindowRef) { }
 
   ngOnInit() {
     const publicId: string = this.thumbnail.image ? this.thumbnail.image.publicId : null;
+    this.froalaOptions.charCounterMax = this.thumbnail.maxCharCount;
     this.thumbnailForm = new FormGroup({
       header: new FormControl(this.thumbnail.header, [Validators.required, Validators.maxLength(50)]),
       image: new FormControl(publicId, Validators.required),
@@ -35,17 +46,29 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
       caption: new FormControl(this.thumbnail.caption, Validators.maxLength(100)),
       footer: new FormControl(this.thumbnail.footer, Validators.maxLength(50))
     });
-    this.statusChangeSubs = this.thumbnailForm.statusChanges.subscribe(status => {
-      if (status === 'VALID') {
-        this.thumbnail.header = this.thumbnailForm.value.header;
-        this.thumbnail.image.publicId = this.thumbnailForm.value.image;
-        this.thumbnail.content = this.thumbnailForm.value.content;
-        this.thumbnail.caption = this.thumbnailForm.value.caption;
-        this.thumbnail.footer = this.thumbnailForm.value.footer;
-        this.thumbnailChanged.emit(this.thumbnail);
-      }
-
+    this.thumbnailForm.controls.content.valueChanges.subscribe(a => {
+      console.log(a);
     });
+  }
+
+  saveData() {
+    console.log(this.editor);
+    if (this.thumbnailForm.valid) {
+      this.thumbnail.header = this.thumbnailForm.value.header;
+      this.thumbnail.image.publicId = this.thumbnailForm.value.image;
+      this.thumbnail.content = this.thumbnailForm.value.content;
+      this.thumbnail.caption = this.thumbnailForm.value.caption;
+      this.thumbnail.footer = this.thumbnailForm.value.footer;
+      this.thumbnailSaved.emit(this.thumbnail);
+    }
+  }
+
+  get dialogTitle() {
+    if (this.mode === CONTENT_COMPONENT_MODES.postDetail) {
+      return 'Add content for the Post';
+    } else {
+      return 'Add content for the Thumbnail';
+    }
   }
 
   showErrorIf(controlName: string, errorName: string) {
@@ -63,7 +86,7 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         {
           insertHandler: data => {
-            //Response data
+            // Response data
             // { assets: Array(1), mlId: "ml_0" }
             // assets: Array(1)
             // 0:
@@ -102,7 +125,7 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.mediaLibrary = null;
-    this.statusChangeSubs.unsubscribe();
+    this.thumbnailForm = null;
   }
 
 }

@@ -8,6 +8,17 @@
   align-content: space-evenly;
   align-items: center;
 }
+
+.thumbnail-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min-content, 500px));
+  grid-auto-columns: minmax(min-content, 500px);
+  grid-auto-flow: columns;
+  row-gap: 10px;
+  justify-content: space-evenly;
+  align-content: space-evenly;
+  align-items: center;
+}
 h3 {
   text-align: center;
 }
