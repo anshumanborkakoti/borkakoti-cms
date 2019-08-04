@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { PostDetail } from 'src/app/models/post-detail.model';
 import { Thumbnail } from 'src/app/models/thumbnail.model';
@@ -25,6 +25,7 @@ export class ThumbnaildialogComponent implements OnInit {
 
   constructor(private dialog: MatDialog) { }
 
+
   ngOnInit() {
     if (this.mode === DIALOG_MODE.add) {
       if (this.contentMode === CONTENT_COMPONENT_MODES.thumbnail) {
@@ -32,6 +33,8 @@ export class ThumbnaildialogComponent implements OnInit {
       } else if (this.contentMode === CONTENT_COMPONENT_MODES.postDetail) {
         this.thumbnail = new PostDetail();
       }
+    } else {
+      this.thumbnail = this.thumbnail.clone();
     }
   }
 
@@ -45,9 +48,10 @@ export class ThumbnaildialogComponent implements OnInit {
     this.dialogRef.componentInstance.mode = this.contentMode;
     this.dialogRef.componentInstance.thumbnailSaved.subscribe(data => {
       console.log(data);
-      this.thumbnailSaved.emit(data);
+      const savedThumbnail = (data as Thumbnail | PostDetail).clone();
+      this.thumbnailSaved.emit(savedThumbnail);
       this.dialogRef.close();
-    })
+    });
   }
 
 }

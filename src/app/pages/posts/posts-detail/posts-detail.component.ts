@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Post } from 'src/app/models/post.model';
 import { PostService } from '../posts.service';
@@ -16,14 +16,17 @@ import { PostDetail } from 'src/app/models/post-detail.model';
   templateUrl: './posts-detail.component.html',
   styleUrls: ['./posts-detail.component.scss']
 })
-export class PostsDetailComponent implements OnInit, AfterContentInit {
+export class PostsDetailComponent implements OnInit {
   postForm: FormGroup;
   post: Post;
   myErrorStateMatcher = new MyErrorStateMatcher();
-  constructor(private postService: PostService, private activatedRoute: ActivatedRoute) { }
+  constructor(
+    private postService: PostService,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit() {
-    const postid = this.activatedRoute.snapshot.params['postid'];
+    const postid = this.activatedRoute.snapshot.params.postid;
     this.post = this.postService.getPost(postid);
     if (!this.post) {
       this.post = new Post();
@@ -37,6 +40,8 @@ export class PostsDetailComponent implements OnInit, AfterContentInit {
         new Issue('Aug 2019', '456', 'Aug 2019'),
         new Issue('Dec 2019', '789', 'Dec 2019')
       ];
+    } else {
+      this.post = this.post.clone();
     }
     this.postForm = new FormGroup({
       label: new FormControl(this.post.label, [Validators.required]),
@@ -49,14 +54,10 @@ export class PostsDetailComponent implements OnInit, AfterContentInit {
     });
   }
 
-  ngAfterContentInit(): void {
-
-  }
-
   onThumbnailSaved(data: Thumbnail | PostDetail) {
     console.log('Thumbnail saved');
     console.log(data);
-    this.post.thumbnail = data;
+    this.post.thumbnail = data.clone();
   }
 
   savePost() {

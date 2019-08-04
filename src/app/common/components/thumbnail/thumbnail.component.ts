@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, Output, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy, Output, ChangeDetectorRef } from '@angular/core';
 import { Thumbnail } from 'src/app/models/thumbnail.model';
 import { Image } from 'src/app/models/image.model';
 import { environment } from 'src/environments/environment';
@@ -26,19 +26,22 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() mode: string = CONTENT_COMPONENT_MODES.thumbnail;
   @Output() thumbnailSaved = new EventEmitter<Thumbnail | PostDetail>();
 
-  @ViewChild('froalaEditor', { static: true }) editor: any;
-
   clImages: Image[];
   mediaLibrary: any;
   thumbnailForm: FormGroup;
   thumbnailErrorStateMatcher = new MyErrorStateMatcher();
   froalaOptions = FROALA_EDITOR_OPTIONS;
 
-  constructor(private window: WindowRef) { }
+  constructor(
+    private window: WindowRef,
+    private cd: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
+    this.thumbnail = this.thumbnail.clone();
     const publicId: string = this.thumbnail.image ? this.thumbnail.image.publicId : null;
     this.froalaOptions.charCounterMax = this.thumbnail.maxCharCount;
+    this.attachFroalaContentChanged();
     this.thumbnailForm = new FormGroup({
       header: new FormControl(this.thumbnail.header, [Validators.required, Validators.maxLength(50)]),
       image: new FormControl(publicId, Validators.required),
@@ -46,20 +49,25 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
       caption: new FormControl(this.thumbnail.caption, Validators.maxLength(100)),
       footer: new FormControl(this.thumbnail.footer, Validators.maxLength(50))
     });
-    this.thumbnailForm.controls.content.valueChanges.subscribe(a => {
-      console.log(a);
-    });
+  }
+
+  private attachFroalaContentChanged(): void {
+    const self = this;
+    this.froalaOptions.events = {
+      contentChanged() {
+        self.cd.detectChanges();
+      }
+    }
   }
 
   saveData() {
-    console.log(this.editor);
     if (this.thumbnailForm.valid) {
       this.thumbnail.header = this.thumbnailForm.value.header;
       this.thumbnail.image.publicId = this.thumbnailForm.value.image;
       this.thumbnail.content = this.thumbnailForm.value.content;
       this.thumbnail.caption = this.thumbnailForm.value.caption;
       this.thumbnail.footer = this.thumbnailForm.value.footer;
-      this.thumbnailSaved.emit(this.thumbnail);
+      this.thumbnailSaved.emit(this.thumbnail.clone());
     }
   }
 

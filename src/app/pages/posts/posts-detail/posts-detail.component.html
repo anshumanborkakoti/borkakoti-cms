@@ -62,10 +62,15 @@
           <mat-icon>delete</mat-icon>
         </button>
       </mat-card-actions>
-      <mat-card-title> {{ post.thumbnail.header}} </mat-card-title>
-      <img mat-card-image [clSrc]="post.thumbnail.image.secureUrl" fetch-format="auto" quality="auto" type="fetch" />
+      <mat-card-title> {{ post.thumbnail.header}}</mat-card-title>
+      <cl-image [public-id]="post.thumbnail.image.publicId" quality="auto" dpr="auto" crop="scale" client_hints="true"
+        width="450">
+        <cl-transformation fetch-format="auto" type="fetch" mat-card-image></cl-transformation>
+      </cl-image>
       <mat-card-subtitle> {{ post.thumbnail.caption}}</mat-card-subtitle>
-      <mat-card-content>{{ post.thumbnail.content}} </mat-card-content>
+      <mat-card-content>
+        <div [froalaView]="post.thumbnail.content"></div>
+      </mat-card-content>
       <mat-card-footer>{{ post.thumbnail.footer}}</mat-card-footer>
     </mat-card>
   </div>

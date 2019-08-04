@@ -7,6 +7,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ThumbnailModule } from 'src/app/common/components/thumbnail/thumbnail.module';
 import { CloudinaryModule } from '@cloudinary/angular-5.x';
+import { CmsFroalaEditorModule } from 'src/app/common/froala-editor/froala-editor.module';
 
 const routes: Routes = [
   {
@@ -31,7 +32,8 @@ const routes: Routes = [
     CloudinaryModule,
     AppMaterialModuleModule,
     RouterModule.forChild(routes),
-    ThumbnailModule
+    ThumbnailModule,
+    CmsFroalaEditorModule
   ],
   exports: [RouterModule]
 })

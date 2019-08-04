@@ -25,7 +25,8 @@
         <input type="text" formControlName="image" [errorStateMatcher]="thumbnailErrorStateMatcher" matInput
           style="display:none" />
         <mat-error *ngIf="thumbnail.image === null">Please provide an image!</mat-error>
-        <div class="thumbnail" *ngIf="thumbnail.image !== null && thumbnail.image.publicId !== null">
+        <div class="thumbnail"
+          *ngIf="thumbnail.image !== null && thumbnail.image.publicId !== null && thumbnail.image.publicId !== ''">
           <cl-image [public-id]="thumbnail.image.publicId" quality="auto" dpr="auto" crop="scale" width="auto"
             height="200" client_hints="true" responsive>
             <cl-transformation fetch-format="auto" type="fetch"></cl-transformation>
@@ -46,7 +47,7 @@
     </fieldset>
     <fieldset class="content-container">
       <legend>Content</legend>
-      <textarea [froalaEditor]="froalaOptions" formControlName="content" #froalaEditor></textarea>
+      <div [froalaEditor]="froalaOptions" formControlName="content"></div>
     </fieldset>
     <fieldset class="footer-container">
       <legend>Footer</legend>
@@ -62,7 +63,8 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button color="accent" [disabled]="!thumbnailForm.valid" (click)="saveData()">Save</button>
+  <button mat-button color="accent" [disabled]="!thumbnailForm.valid || (thumbnailForm.valid && !thumbnailForm.dirty)"
+    (click)="saveData()">Save</button>
   <mat-divider [vertical]="true" [inset]='true'></mat-divider>
   <button mat-button mat-dialog-close color="warn">Cancel</button>
 </mat-dialog-actions>
