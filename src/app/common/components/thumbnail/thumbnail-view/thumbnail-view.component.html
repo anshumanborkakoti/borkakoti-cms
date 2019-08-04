@@ -1,0 +1,19 @@
+<mat-card>
+  <mat-card-actions align="end">
+    <app-thumbnail-dialog contentMode='THUMBNAIL' mode='EDIT' [thumbnail]='thumbnail'
+      (thumbnailSaved)='onThumbnailEdited($event)'></app-thumbnail-dialog>
+    <button type="button" mat-icon-button matTooltip="Delete">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-card-actions>
+  <mat-card-title> {{ thumbnail.header}}</mat-card-title>
+  <cl-image [public-id]="thumbnail.image.publicId" quality="auto" dpr="auto" crop="scale" client_hints="true"
+    width="450">
+    <cl-transformation fetch-format="auto" type="fetch" mat-card-image></cl-transformation>
+  </cl-image>
+  <mat-card-subtitle> {{ thumbnail.caption}}</mat-card-subtitle>
+  <mat-card-content>
+    <div [froalaView]="thumbnail.content"></div>
+  </mat-card-content>
+  <mat-card-footer>{{ thumbnail.footer}}</mat-card-footer>
+</mat-card>

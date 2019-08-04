@@ -53,15 +53,13 @@ export class PostsDetailComponent implements OnInit {
       authors: new FormControl(this.post.authors.join(', '), [Validators.required])
     });
   }
-
+  savePost() {
+    console.log(this.postForm);
+    console.log(this.post.thumbnail);
+  }
   onThumbnailSaved(data: Thumbnail | PostDetail) {
     console.log('Thumbnail saved');
     console.log(data);
     this.post.thumbnail = data.clone();
-  }
-
-  savePost() {
-    console.log(this.postForm);
-    console.log(this.post.thumbnail);
   }
 }

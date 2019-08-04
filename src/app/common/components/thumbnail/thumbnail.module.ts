@@ -6,9 +6,10 @@ import { AppMaterialModuleModule } from 'src/app/app-material-module/app-materia
 import { ReactiveFormsModule } from '@angular/forms';
 import { CmsFroalaEditorModule } from '../../froala-editor/froala-editor.module';
 import { ThumbnaildialogComponent } from './thumbnaildialog/thumbnaildialog.component';
+import { ThumbnailViewComponent } from './thumbnail-view/thumbnail-view.component';
 
 @NgModule({
-  declarations: [ThumbnailComponent, ThumbnaildialogComponent],
+  declarations: [ThumbnailComponent, ThumbnaildialogComponent, ThumbnailViewComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -17,6 +18,6 @@ import { ThumbnaildialogComponent } from './thumbnaildialog/thumbnaildialog.comp
     CmsFroalaEditorModule
   ],
   entryComponents: [ThumbnailComponent],
-  exports: [ThumbnailComponent, ThumbnaildialogComponent]
+  exports: [ThumbnailComponent, ThumbnaildialogComponent, ThumbnailViewComponent]
 })
 export class ThumbnailModule { }

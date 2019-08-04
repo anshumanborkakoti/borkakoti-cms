@@ -4,7 +4,6 @@ import { PostDetail } from 'src/app/models/post-detail.model';
 import { Category } from 'src/app/models/category.model';
 import { Issue } from 'src/app/models/issue.model';
 import { BehaviorSubject } from 'rxjs';
-import { Thumbnail } from 'src/app/models/thumbnail.model';
 
 const categories: Category[] = [
   new Category('Category 1', '454554', 'Category 1 label'),

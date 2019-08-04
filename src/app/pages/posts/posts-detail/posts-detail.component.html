@@ -54,25 +54,7 @@
   <mat-divider></mat-divider>
   <h3 *ngIf="post.thumbnail === null">No Thumbnails</h3>
   <div class="thumbnail-container" *ngIf="post.thumbnail !== null">
-    <mat-card>
-      <mat-card-actions align="end">
-        <app-thumbnail-dialog contentMode='THUMBNAIL' mode='EDIT' [thumbnail]='post.thumbnail'
-          (thumbnailSaved)='onThumbnailSaved($event)'></app-thumbnail-dialog>
-        <button type="button" mat-icon-button matTooltip="Delete">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </mat-card-actions>
-      <mat-card-title> {{ post.thumbnail.header}}</mat-card-title>
-      <cl-image [public-id]="post.thumbnail.image.publicId" quality="auto" dpr="auto" crop="scale" client_hints="true"
-        width="450">
-        <cl-transformation fetch-format="auto" type="fetch" mat-card-image></cl-transformation>
-      </cl-image>
-      <mat-card-subtitle> {{ post.thumbnail.caption}}</mat-card-subtitle>
-      <mat-card-content>
-        <div [froalaView]="post.thumbnail.content"></div>
-      </mat-card-content>
-      <mat-card-footer>{{ post.thumbnail.footer}}</mat-card-footer>
-    </mat-card>
+    <app-thumbnail-view [thumbnail]="post.thumbnail" (thumbnailEdited)='onThumbnailSaved($event)'></app-thumbnail-view>
   </div>
   <button type="button" color="accent" (click)="savePost()" mat-raised-button>
     Save
