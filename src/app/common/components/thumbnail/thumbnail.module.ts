@@ -7,9 +7,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CmsFroalaEditorModule } from '../../froala-editor/froala-editor.module';
 import { ThumbnaildialogComponent } from './thumbnaildialog/thumbnaildialog.component';
 import { ThumbnailViewComponent } from './thumbnail-view/thumbnail-view.component';
+import { ThumbnailTabsComponent } from './thumbnail-tabs/thumbnail-tabs.component';
 
 @NgModule({
-  declarations: [ThumbnailComponent, ThumbnaildialogComponent, ThumbnailViewComponent],
+  declarations: [ThumbnailComponent, ThumbnaildialogComponent, ThumbnailViewComponent, ThumbnailTabsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -18,6 +19,6 @@ import { ThumbnailViewComponent } from './thumbnail-view/thumbnail-view.componen
     CmsFroalaEditorModule
   ],
   entryComponents: [ThumbnailComponent],
-  exports: [ThumbnailComponent, ThumbnaildialogComponent, ThumbnailViewComponent]
+  exports: [ThumbnailComponent, ThumbnaildialogComponent, ThumbnailViewComponent, ThumbnailTabsComponent]
 })
 export class ThumbnailModule { }

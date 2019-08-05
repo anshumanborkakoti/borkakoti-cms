@@ -8,11 +8,7 @@ import { MyErrorStateMatcher } from 'src/app/app-material-module/error-state-mat
 import { EventEmitter } from '@angular/core';
 import { FROALA_EDITOR_OPTIONS } from '../../froala-editor/options.froala';
 import { PostDetail } from 'src/app/models/post-detail.model';
-
-export const CONTENT_COMPONENT_MODES = {
-  postDetail: 'POST_DETAIL',
-  thumbnail: 'THUMBNAIL'
-};
+import { APPTHUMBNAIL_CONTENT_COMPONENT_MODES } from '../../util/constants';
 
 @Component({
   selector: 'app-thumbnail',
@@ -23,7 +19,7 @@ export const CONTENT_COMPONENT_MODES = {
 })
 export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() thumbnail: Thumbnail | PostDetail;
-  @Input() mode: string = CONTENT_COMPONENT_MODES.thumbnail;
+  @Input() mode: string = APPTHUMBNAIL_CONTENT_COMPONENT_MODES.thumbnail;
   @Output() thumbnailSaved = new EventEmitter<Thumbnail | PostDetail>();
 
   clImages: Image[];
@@ -72,7 +68,7 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get dialogTitle() {
-    if (this.mode === CONTENT_COMPONENT_MODES.postDetail) {
+    if (this.mode === APPTHUMBNAIL_CONTENT_COMPONENT_MODES.postDetail) {
       return 'Add content for the Post';
     } else {
       return 'Add content for the Thumbnail';

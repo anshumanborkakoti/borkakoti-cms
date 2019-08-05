@@ -9,7 +9,8 @@ import { PostDetail } from 'src/app/models/post-detail.model';
 })
 export class ThumbnailViewComponent implements OnInit {
   @Input() thumbnail: Thumbnail | PostDetail;
-  @Output() thumbnailEdited = new EventEmitter();
+  @Output() thumbnailEdited = new EventEmitter<Thumbnail | PostDetail>();
+  @Output() thumbnailDeleted = new EventEmitter<boolean>();
 
   constructor() { }
 
@@ -20,5 +21,10 @@ export class ThumbnailViewComponent implements OnInit {
   onThumbnailEdited(data: Thumbnail | PostDetail) {
     this.thumbnail = data.clone();
     this.thumbnailEdited.emit(this.thumbnail);
+  }
+
+  onDelete() {
+    this.thumbnail = null;
+    this.thumbnailDeleted.emit(true);
   }
 }

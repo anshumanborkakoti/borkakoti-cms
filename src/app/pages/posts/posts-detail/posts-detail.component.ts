@@ -6,10 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { Issue } from 'src/app/models/issue.model';
 import { MyErrorStateMatcher } from 'src/app/app-material-module/error-state-matcher';
-import { Thumbnail } from 'src/app/models/thumbnail.model';
-import { PostDetail } from 'src/app/models/post-detail.model';
-
-
 
 @Component({
   selector: 'app-posts-detail',
@@ -20,6 +16,8 @@ export class PostsDetailComponent implements OnInit {
   postForm: FormGroup;
   post: Post;
   myErrorStateMatcher = new MyErrorStateMatcher();
+
+
   constructor(
     private postService: PostService,
     private activatedRoute: ActivatedRoute
@@ -57,9 +55,9 @@ export class PostsDetailComponent implements OnInit {
     console.log(this.postForm);
     console.log(this.post.thumbnail);
   }
-  onThumbnailSaved(data: Thumbnail | PostDetail) {
-    console.log('Thumbnail saved');
-    console.log(data);
-    this.post.thumbnail = data.clone();
+
+  onTabsChanged(data: Post) {
+    this.post.detail = data.detail;
+    this.post.thumbnail = data.thumbnail;
   }
 }

@@ -4,7 +4,7 @@ export function cloneCmsClassArray<T extends CmsClass<T>>(cArray: T[]): T[] {
   if (!cArray) {
     return null;
   }
-  return cArray.slice().map(a => {
+  return [...cArray].map(a => {
     return a.clone();
   });
 }
@@ -19,4 +19,14 @@ export function cloneCmsClass<T extends CmsClass<T>>(toClone: T) {
     return null;
   }
   return toClone.clone();
+}
+
+export function makeid(length: number) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }

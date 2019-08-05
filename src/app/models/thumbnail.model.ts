@@ -1,6 +1,6 @@
 import { Image } from './image.model';
 import { CmsClass } from './general-class.interface';
-import { cloneCmsClass, isCmsClassesEqual } from '../common/util/utils';
+import { cloneCmsClass, isCmsClassesEqual, makeid } from '../common/util/utils';
 
 
 export class Thumbnail implements CmsClass<Thumbnail>{
@@ -16,7 +16,7 @@ export class Thumbnail implements CmsClass<Thumbnail>{
   }
 
   constructor(
-    public id = Math.random().toString(32),
+    public id = makeid(10),
     public image: Image = new Image(),
     public caption: string = '',
     public content: string = '',

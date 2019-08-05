@@ -1,0 +1,51 @@
+<mat-toolbar>
+  <span class="fill-remaining-space">Posts - Maximum TODO</span>
+</mat-toolbar>
+<mat-tab-group mat-align-tabs="start">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Thumbnail
+      <app-thumbnail-dialog [contentMode]='thumbnailContentModes.thumbnail' [mode]='thumbnailDialogModes.add'
+        (thumbnailSaved)='onSaved($event)' *ngIf="post.thumbnail === null"></app-thumbnail-dialog>
+    </ng-template>
+
+    <ng-template matTabContent>
+      <div class="emptyThumbnail tab-content" *ngIf="post.thumbnail === null">
+        <span class="h3">No thumbnail</span>
+      </div>
+      <div class="thumbnail-container" *ngIf="post.thumbnail !== null">
+        <app-thumbnail-view [thumbnail]="post.thumbnail" (thumbnailEdited)='onThumbnailEdited($event)'
+          (thumbnailDeleted)="onThumbnailDeleted($event)">
+        </app-thumbnail-view>
+      </div>
+    </ng-template>
+
+  </mat-tab>
+  <!-- Post detail-->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Add Content
+      <app-thumbnail-dialog [contentMode]='thumbnailContentModes.postDetail' [mode]='thumbnailDialogModes.add'
+        (thumbnailSaved)='onSaved($event)'></app-thumbnail-dialog>
+    </ng-template>
+    <ng-template matTabContent>
+      <div class="emptyThumbnail tab-content" *ngIf="post.detail === null || post.detail.length === 0">
+        <span class="h3">No Content</span>
+      </div>
+
+      <mat-tab-group *ngIf="post.detail !== null || post.detail.length > 0" [selectedIndex]="selectedTabIndex">
+        <mat-tab label="{{ (detail.header.length > 10) ? (detail.header | slice:0:10)+'...': detail.header}}"
+          *ngFor="let detail of post.detail; let index=index">
+          <ng-template matTabContent>
+            <div class="thumbnail-container">
+              <app-thumbnail-view [thumbnail]="detail" (thumbnailEdited)='onDetailEdited($event)'
+                (thumbnailDeleted)="onDetailDeleted($event,index)"></app-thumbnail-view>
+            </div>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+
+
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

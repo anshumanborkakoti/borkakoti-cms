@@ -2,12 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { PostDetail } from 'src/app/models/post-detail.model';
 import { Thumbnail } from 'src/app/models/thumbnail.model';
-import { ThumbnailComponent, CONTENT_COMPONENT_MODES } from '../thumbnail.component';
+import { ThumbnailComponent } from '../thumbnail.component';
+import { APPTHUMBNAILDIALOG_MODE, APPTHUMBNAIL_CONTENT_COMPONENT_MODES } from 'src/app/common/util/constants';
 
-export const DIALOG_MODE = {
-  edit: 'EDIT',
-  add: 'ADD'
-};
+
 
 @Component({
   selector: 'app-thumbnail-dialog',
@@ -27,10 +25,14 @@ export class ThumbnaildialogComponent implements OnInit {
 
 
   ngOnInit() {
-    if (this.mode === DIALOG_MODE.add) {
-      if (this.contentMode === CONTENT_COMPONENT_MODES.thumbnail) {
+    this.initObjects();
+  }
+
+  private initObjects() {
+    if (this.mode === APPTHUMBNAILDIALOG_MODE.add) {
+      if (this.contentMode === APPTHUMBNAIL_CONTENT_COMPONENT_MODES.thumbnail) {
         this.thumbnail = new Thumbnail();
-      } else if (this.contentMode === CONTENT_COMPONENT_MODES.postDetail) {
+      } else if (this.contentMode === APPTHUMBNAIL_CONTENT_COMPONENT_MODES.postDetail) {
         this.thumbnail = new PostDetail();
       }
     } else {
@@ -39,10 +41,11 @@ export class ThumbnaildialogComponent implements OnInit {
   }
 
   get isEditMode(): boolean {
-    return this.mode === DIALOG_MODE.edit;
+    return this.mode === APPTHUMBNAILDIALOG_MODE.edit;
   }
 
   openDialog() {
+    this.initObjects();
     this.dialogRef = this.dialog.open(ThumbnailComponent);
     this.dialogRef.componentInstance.thumbnail = this.thumbnail;
     this.dialogRef.componentInstance.mode = this.contentMode;

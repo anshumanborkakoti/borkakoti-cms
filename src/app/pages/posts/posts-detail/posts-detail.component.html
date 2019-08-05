@@ -45,17 +45,11 @@
       <mat-error>Please enter provide at least one author</mat-error>
     </mat-form-field>
   </div>
-  <mat-divider></mat-divider>
-  <mat-toolbar>
-    <span class="fill-remaining-space">Thumbnail</span>
-    <app-thumbnail-dialog contentMode='THUMBNAIL' mode='ADD' [thumbnail]='post.thumbnail'
-      (thumbnailSaved)='onThumbnailSaved($event)' *ngIf="post.thumbnail === null"></app-thumbnail-dialog>
-  </mat-toolbar>
-  <mat-divider></mat-divider>
-  <h3 *ngIf="post.thumbnail === null">No Thumbnails</h3>
-  <div class="thumbnail-container" *ngIf="post.thumbnail !== null">
-    <app-thumbnail-view [thumbnail]="post.thumbnail" (thumbnailEdited)='onThumbnailSaved($event)'></app-thumbnail-view>
-  </div>
+  <section>
+    <mat-divider></mat-divider>
+    <app-thumbnail-tabs [post]="post" (tabsChanged)="onTabsChanged($event)"></app-thumbnail-tabs>
+    <mat-divider></mat-divider>
+  </section>
   <button type="button" color="accent" (click)="savePost()" mat-raised-button>
     Save
   </button>
