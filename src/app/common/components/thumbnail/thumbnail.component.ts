@@ -9,6 +9,7 @@ import { EventEmitter } from '@angular/core';
 import { FROALA_EDITOR_OPTIONS } from '../../froala-editor/options.froala';
 import { PostDetail } from 'src/app/models/post-detail.model';
 import { APPTHUMBNAIL_CONTENT_COMPONENT_MODES } from '../../util/constants';
+import { showErrorIf } from '../../util/utils';
 
 @Component({
   selector: 'app-thumbnail',
@@ -27,6 +28,7 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
   thumbnailForm: FormGroup;
   thumbnailErrorStateMatcher = new MyErrorStateMatcher();
   froalaOptions = FROALA_EDITOR_OPTIONS;
+  showErrorIf = showErrorIf;
 
   constructor(
     private window: WindowRef,
@@ -75,10 +77,7 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  showErrorIf(controlName: string, errorName: string) {
-    const errors = this.thumbnailForm.get(controlName).errors;
-    return !this.thumbnailForm.get(controlName).valid && errors && errors[errorName] && this.thumbnailForm.touched;
-  }
+
 
   ngAfterViewInit(): void {
     this.mediaLibrary = this.window.cloudinary

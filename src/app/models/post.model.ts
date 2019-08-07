@@ -5,6 +5,7 @@ import { Category } from './category.model';
 import { Issue } from './issue.model';
 import { CmsClass } from './general-class.interface';
 import { cloneCmsClassArray, cloneCmsClass } from '../common/util/utils';
+import { User } from './user.model';
 
 export class Post implements CmsClass<Post> {
   equals(that: Post): boolean {
@@ -40,7 +41,9 @@ export class Post implements CmsClass<Post> {
     public categories: Category[] = [],
     public issues: Issue[] = [],
     public label: string = '',
-    public id: string = '') { }
+    public id: string = '',
+    public assignedTo: User = null
+  ) { }
 
 
 }

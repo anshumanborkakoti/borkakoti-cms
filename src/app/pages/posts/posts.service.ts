@@ -4,6 +4,8 @@ import { PostDetail } from 'src/app/models/post-detail.model';
 import { Category } from 'src/app/models/category.model';
 import { Issue } from 'src/app/models/issue.model';
 import { BehaviorSubject } from 'rxjs';
+import { makeid } from 'src/app/common/util/utils';
+import { Edit } from 'src/app/models/edit.model';
 
 const categories: Category[] = [
   new Category('Category 1', '454554', 'Category 1 label'),
@@ -22,7 +24,18 @@ const issues: Issue[] = [
 let posts: Post[] = [
   new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date()),
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     false,
     false,
     null,
@@ -31,11 +44,17 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 1',
-    Math.random().toString(32)
+    makeid(10)
   ),
   new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     true,
     true,
     null,
@@ -44,11 +63,17 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 2',
-    Math.random().toString(32)
+    makeid(10)
   ),
   new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     false,
     false,
     null,
@@ -57,10 +82,16 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 3',
-    Math.random().toString(32)
+    makeid(10)
   ), new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     true,
     true,
     null,
@@ -69,11 +100,17 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 4',
-    Math.random().toString(32)
+    makeid(10)
   ),
   new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     false,
     false,
     null,
@@ -82,11 +119,17 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 1',
-    Math.random().toString(32)
+    makeid(10)
   ),
   new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     true,
     true,
     null,
@@ -95,11 +138,17 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 2',
-    Math.random().toString(32)
+    makeid(10)
   ),
   new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     false,
     false,
     null,
@@ -108,10 +157,16 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 3',
-    Math.random().toString(32)
+    makeid(10)
   ), new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     true,
     true,
     null,
@@ -120,11 +175,17 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 4',
-    Math.random().toString(32)
+    makeid(10)
   ),
   new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     false,
     false,
     null,
@@ -133,11 +194,17 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 1',
-    Math.random().toString(32)
+    makeid(10)
   ),
   new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     true,
     true,
     null,
@@ -146,11 +213,17 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 2',
-    Math.random().toString(32)
+    makeid(10)
   ),
   new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     false,
     false,
     null,
@@ -159,10 +232,16 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 3',
-    Math.random().toString(32)
+    makeid(10)
   ), new Post(
     ['anshuman', 'prarthana'],
-    [],
+    [
+      new Edit('Anshuman', 'Hi There', new Date()),
+      new Edit('Shiron', 'Edit 1', new Date()),
+      new Edit('Prarthana', 'Redo', new Date()),
+      new Edit('Juti', 'Edit 2', new Date()),
+      new Edit('PRarthana', 'Approved!', new Date())
+    ],
     true,
     true,
     null,
@@ -171,7 +250,7 @@ let posts: Post[] = [
     categories,
     issues,
     'Post 4',
-    Math.random().toString(32)
+    makeid(10)
   )
 ];
 

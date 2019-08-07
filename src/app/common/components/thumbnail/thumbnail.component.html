@@ -6,10 +6,10 @@
       <mat-form-field>
         <input type="text" matInput formControlName="header" required placeholder="Header"
           [errorStateMatcher]="thumbnailErrorStateMatcher" />
-        <mat-error *ngIf="showErrorIf('header', 'required')">
+        <mat-error *ngIf="showErrorIf('header', 'required', thumbnailForm)">
           Must enter a header!
         </mat-error>
-        <mat-error *ngIf="showErrorIf('header', 'maxlength')">
+        <mat-error *ngIf="showErrorIf('header', 'maxlength', thumbnailForm)">
           The header must be of a maximum of
           {{ thumbnailForm.get("header").errors["maxlength"].requiredLength }}
           characters</mat-error>
@@ -24,7 +24,8 @@
       <div class="selected-images">
         <input type="text" formControlName="image" [errorStateMatcher]="thumbnailErrorStateMatcher" matInput
           style="display:none" />
-        <mat-error *ngIf="thumbnail.image === null">Please provide an image!</mat-error>
+        <mat-error *ngIf="showErrorIf('image', 'required', thumbnailForm)">Please provide an image!
+        </mat-error>
         <div class="thumbnail"
           *ngIf="thumbnail.image !== null && thumbnail.image.publicId !== null && thumbnail.image.publicId !== ''">
           <cl-image [public-id]="thumbnail.image.publicId" quality="auto" dpr="auto" crop="scale" width="auto"
@@ -39,7 +40,7 @@
       <mat-form-field>
         <input type="text" matInput formControlName="caption" placeholder="Caption"
           [errorStateMatcher]="thumbnailErrorStateMatcher" />
-        <mat-error *ngIf="showErrorIf('caption', 'maxlength')">
+        <mat-error *ngIf="showErrorIf('caption', 'maxlength', thumbnailForm)">
           The caption must be of a maximum of
           {{ thumbnailForm.get("caption").errors["maxlength"].requiredLength }}
           characters</mat-error>
@@ -54,7 +55,7 @@
       <mat-form-field>
         <input type="text" matInput formControlName="footer" placeholder="Footer"
           [errorStateMatcher]="thumbnailErrorStateMatcher" />
-        <mat-error *ngIf="showErrorIf('footer', 'maxlength')">
+        <mat-error *ngIf="showErrorIf('footer', 'maxlength', thumbnailForm)">
           The footer must be of a maximum of
           {{ thumbnailForm.get("footer").errors["maxlength"].requiredLength }}
           characters</mat-error>

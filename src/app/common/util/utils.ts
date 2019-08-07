@@ -1,4 +1,5 @@
 import { CmsClass } from 'src/app/models/general-class.interface';
+import { FormGroup } from '@angular/forms';
 
 export function cloneCmsClassArray<T extends CmsClass<T>>(cArray: T[]): T[] {
   if (!cArray) {
@@ -29,4 +30,9 @@ export function makeid(length: number) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+}
+
+export function showErrorIf(controlName: string, errorName: string, form: FormGroup) {
+  const errors = form.get(controlName).errors;
+  return !form.get(controlName).valid && errors && errors[errorName] && form.touched;
 }
