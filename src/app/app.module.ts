@@ -9,8 +9,12 @@ import { IssuesModule } from './pages/issues/issues.module';
 import { CategoriesModule } from './pages/categories/categories.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CloudinaryModule } from '@cloudinary/angular-5.x';
-import * as  Cloudinary from 'cloudinary-core';
+import { Cloudinary } from 'cloudinary-core';
 import { environment } from 'src/environments/environment';
+
+export const cloudinaryLib = {
+  Cloudinary: Cloudinary
+};
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,7 +26,7 @@ import { environment } from 'src/environments/environment';
     IssuesModule,
     CategoriesModule,
     HttpClientModule,
-    CloudinaryModule.forRoot(Cloudinary,
+    CloudinaryModule.forRoot(cloudinaryLib,
       {
         cloud_name: environment.cloudinary_cloud_name,
         upload_preset: environment.cloudinary_upload_preset

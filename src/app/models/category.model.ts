@@ -8,12 +8,7 @@ export class Category implements Tag<Category> {
     if (!that) {
       return false;
     }
-    return this.name === that.name
-      && this.id === that.id
-      && this.label === that.label
-      && isCmsClassesEqual(this.thumbnail, that.thumbnail)
-      && this.minPostDetail === that.minPostDetail
-      && this.maxPostDetail === that.maxPostDetail;
+    return this.id === that.id;
 
   }
   clone(): Category {
@@ -24,7 +19,7 @@ export class Category implements Tag<Category> {
       cloneCmsClass(this.thumbnail),
       this.minPostDetail,
       this.maxPostDetail
-    )
+    );
   }
   constructor(
     public name = '',

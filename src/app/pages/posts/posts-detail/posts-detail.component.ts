@@ -9,6 +9,10 @@ import { MyErrorStateMatcher } from 'src/app/app-material-module/error-state-mat
 import { showErrorIf } from 'src/app/common/util/utils';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Edit } from 'src/app/models/edit.model';
+import { AuthorsService } from 'src/app/services/authors.service';
+import { CategoryService } from 'src/app/services/category.service';
+import { IssuesService } from 'src/app/services/issues.service';
+import { Author } from 'src/app/models/author.model';
 
 @Component({
   selector: 'app-posts-detail',
@@ -20,50 +24,87 @@ export class PostsDetailComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  dataSource: MatTableDataSource<Edit>;
+  editDataSource: MatTableDataSource<Edit>;
   postForm: FormGroup;
   post: Post;
   myErrorStateMatcher = new MyErrorStateMatcher();
   showErrorIf = showErrorIf;
   displayedEditColumns = ['editor', 'comment', 'date'];
 
+  /** Catgeories */
+  allCategories: Category[];
+
+  /** Issues */
+  allIssues: Issue[];
+
+  /** Authors */
+  allAuthors: Author[];
+
   constructor(
     private postService: PostService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private authorService: AuthorsService,
+    private categoryService: CategoryService,
+    private issueService: IssuesService
   ) { }
+
+  private initCategories() {
+    this.allCategories = this.categoryService.getAllCategories();
+  }
+
+  private initIssues() {
+    this.allIssues = this.issueService.getAllIssues();
+  }
+
+  private initAuthors() {
+    this.allAuthors = this.authorService.getAllAuthors();
+  }
 
   ngOnInit() {
     const postid = this.activatedRoute.snapshot.params.postid;
     this.post = this.postService.getPost(postid);
     if (!this.post) {
       this.post = new Post();
-      this.post.categories = [
-        new Category('Poetry', '123', 'Poetry'),
-        new Category('Story', '456', 'Story'),
-        new Category('Photography', '789', 'Photography')
-      ];
-      this.post.issues = [
-        new Issue('April 2019', '123', 'April 2019'),
-        new Issue('Aug 2019', '456', 'Aug 2019'),
-        new Issue('Dec 2019', '789', 'Dec 2019')
-      ];
+      this.post.category = this.categoryService.MOCK_CATEGORY;
+      this.post.issues = this.issueService.MOCK_ISSUES;
+      this.post.authors = this.authorService.MOCK_AUTHORS;
     } else {
       this.post = this.post.clone();
     }
-    this.dataSource = new MatTableDataSource<Edit>(this.post.editHistory);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
 
+    this.initCategories();
+    this.initEditTable();
+    this.initIssues();
+    this.initAuthors()
+    this.initForm();
+  }
+
+  private initForm() {
     this.postForm = new FormGroup({
       label: new FormControl(this.post.label, [Validators.required]),
       approved: new FormControl(this.post.approved),
       archived: new FormControl(this.post.archived),
-      published: new FormControl(this.post.published),
-      categories: new FormControl(this.post.categories.map(category => category.id), [Validators.required]),
-      issues: new FormControl(this.post.issues.map(issue => issue.id)),
-      authors: new FormControl(this.post.authors.join(', '), [Validators.required]),
+      category: new FormControl(this.post.category.id, [Validators.required]),
+      issues: new FormControl(this.post.issues.map(issue => issue.id)), // TODO Convert to issue object
+      authors: new FormControl(this.post.authors.map(author => author.id), [Validators.required]), // TODO Convert to author object
       editComment: new FormControl('', [Validators.required, Validators.maxLength(1000)])
     });
+  }
+
+  private initEditTable() {
+    this.editDataSource = new MatTableDataSource<Edit>(this.post.editHistory);
+    this.editDataSource.paginator = this.paginator;
+    this.editDataSource.sort = this.sort;
+    this.editDataSource.sortingDataAccessor = (anEdit, aColumnId): string | number => {
+      switch (aColumnId) {
+        case 'editor':
+          return anEdit.editor.name;
+        case 'date':
+          return anEdit.date.getTime();
+        default:
+          return anEdit[aColumnId];
+      }
+    }
   }
   savePost() {
     console.log(this.postForm);

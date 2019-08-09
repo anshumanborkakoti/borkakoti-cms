@@ -6,44 +6,54 @@ import { Issue } from './issue.model';
 import { CmsClass } from './general-class.interface';
 import { cloneCmsClassArray, cloneCmsClass } from '../common/util/utils';
 import { User } from './user.model';
+import { Author } from './author.model';
 
 export class Post implements CmsClass<Post> {
   equals(that: Post): boolean {
     if (!that) {
       return false;
     }
-    //TODO find a better way
-    return JSON.stringify(this) === JSON.stringify(that);
+    return this.id === that.id;
   }
   clone(): Post {
     return new Post(
-      [...this.authors],
+      cloneCmsClassArray<Author>(this.authors),
       [...this.editHistory],
       this.archived,
-      this.published,
       cloneCmsClass(this.thumbnail),
       cloneCmsClassArray<PostDetail>(this.detail),
       this.approved,
-      cloneCmsClassArray<Category>(this.categories),
+      cloneCmsClass<Category>(this.category),
       cloneCmsClassArray<Issue>(this.issues),
       this.label,
-      this.id
+      this.id,
+      this.content,
+      this.assignedTo
     );
   }
   constructor(
-    public authors: string[] = [],
+    public authors: Author[] = [],
     public editHistory: Edit[] = [],
     public archived: boolean = false,
-    public published: boolean = false,
     public thumbnail: Thumbnail = null,
     public detail: PostDetail[] = [],
     public approved: boolean = false,
-    public categories: Category[] = [],
+    public category: Category = null,
     public issues: Issue[] = [],
     public label: string = '',
     public id: string = '',
-    public assignedTo: User = null
+    public content: PostDetail = null,
+    public assignedTo: User = new User('Anshuman')
   ) { }
 
+  /**
+   * Post is published if an issue that it is tagged to is published
+   */
+  public get published() {
+    if (this.issues === null || this.issues.length === 0) {
+      return false;
+    }
+    return this.issues.some(issue => issue.published === true);
+  }
 
 }

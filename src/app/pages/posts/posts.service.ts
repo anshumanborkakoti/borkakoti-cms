@@ -6,37 +6,39 @@ import { Issue } from 'src/app/models/issue.model';
 import { BehaviorSubject } from 'rxjs';
 import { makeid } from 'src/app/common/util/utils';
 import { Edit } from 'src/app/models/edit.model';
+import { User } from 'src/app/models/user.model';
+import { Author } from 'src/app/models/author.model';
 
-const categories: Category[] = [
-  new Category('Category 1', '454554', 'Category 1 label'),
-  new Category('Category 2', '435', 'Category 2 label'),
-  new Category('Category 3', '23232', 'Category 3 label'),
-  new Category('Category 4', '7889879', 'Category 4 label')
-];
+const categories = new Category('Poetry', '123', 'Poetry');
 
 const issues: Issue[] = [
-  new Issue('April 2019', '45435432', 'April 2019', null, true, false),
-  new Issue('May 2019', '2312321323', 'May 2019', null, true, false),
-  new Issue('June 2019', '9879879', 'June 2019', null, true, false),
-  new Issue('Dec 2019', '6765765', 'Dec 2019', null, true, false),
-]
+  new Issue('April 2019', '1234', 'April 2019', null, true, false),
+  new Issue('May 2019', '5678', 'May 2019', null, true, false)
+];
+
+const anshuman = new User('Anshuman');
+const prarthana = new User('Prarthana');
+const shiron = new User('Shiron');
+const juti = new User('Juti');
+
+const anshumanAuthor = new Author('Anshuman author');
+const prarthanaAuthor = new Author('Prarthana author');
 
 let posts: Post[] = [
   new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date()),
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date()),
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    false,
     false,
     null,
     [new PostDetail()],
@@ -47,15 +49,14 @@ let posts: Post[] = [
     makeid(10)
   ),
   new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    true,
     true,
     null,
     [new PostDetail()],
@@ -66,15 +67,14 @@ let posts: Post[] = [
     makeid(10)
   ),
   new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    false,
     false,
     null,
     [new PostDetail()],
@@ -84,15 +84,14 @@ let posts: Post[] = [
     'Post 3',
     makeid(10)
   ), new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    true,
     true,
     null,
     [new PostDetail()],
@@ -103,15 +102,14 @@ let posts: Post[] = [
     makeid(10)
   ),
   new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    false,
     false,
     null,
     [new PostDetail()],
@@ -122,15 +120,14 @@ let posts: Post[] = [
     makeid(10)
   ),
   new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    true,
     true,
     null,
     [new PostDetail()],
@@ -141,15 +138,14 @@ let posts: Post[] = [
     makeid(10)
   ),
   new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    false,
     false,
     null,
     [new PostDetail()],
@@ -159,15 +155,14 @@ let posts: Post[] = [
     'Post 3',
     makeid(10)
   ), new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    true,
     true,
     null,
     [new PostDetail()],
@@ -178,15 +173,14 @@ let posts: Post[] = [
     makeid(10)
   ),
   new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    false,
     false,
     null,
     [new PostDetail()],
@@ -197,15 +191,14 @@ let posts: Post[] = [
     makeid(10)
   ),
   new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    true,
     true,
     null,
     [new PostDetail()],
@@ -216,15 +209,14 @@ let posts: Post[] = [
     makeid(10)
   ),
   new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    false,
     false,
     null,
     [new PostDetail()],
@@ -234,15 +226,14 @@ let posts: Post[] = [
     'Post 3',
     makeid(10)
   ), new Post(
-    ['anshuman', 'prarthana'],
+    [anshumanAuthor, prarthanaAuthor],
     [
-      new Edit('Anshuman', 'Hi There', new Date()),
-      new Edit('Shiron', 'Edit 1', new Date()),
-      new Edit('Prarthana', 'Redo', new Date()),
-      new Edit('Juti', 'Edit 2', new Date()),
-      new Edit('PRarthana', 'Approved!', new Date())
+      new Edit(anshuman, 'Hi There', new Date()),
+      new Edit(shiron, 'Edit 1', new Date()),
+      new Edit(prarthana, 'Redo', new Date()),
+      new Edit(juti, 'Edit 2', new Date()),
+      new Edit(prarthana, 'Approved!', new Date())
     ],
-    true,
     true,
     null,
     [new PostDetail()],

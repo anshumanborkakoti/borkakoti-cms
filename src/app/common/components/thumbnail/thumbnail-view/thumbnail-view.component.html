@@ -2,7 +2,7 @@
   <mat-card-actions align="end">
     <app-thumbnail-dialog contentMode='THUMBNAIL' mode='EDIT' [thumbnail]='thumbnail'
       (thumbnailSaved)='onThumbnailEdited($event)'></app-thumbnail-dialog>
-    <button type="button" mat-icon-button matTooltip="Delete" (click)="onDelete($event)">
+    <button type="button" mat-icon-button matTooltip="Delete" (click)="onDelete()">
       <mat-icon>delete</mat-icon>
     </button>
   </mat-card-actions>
