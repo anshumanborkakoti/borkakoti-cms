@@ -43,7 +43,7 @@ export class Post implements CmsClass<Post> {
     public label: string = '',
     public id: string = '',
     public content: PostDetail = null,
-    public assignedTo: User = new User('Anshuman')
+    public assignedTo: User = new User('NONE')
   ) { }
 
   /**

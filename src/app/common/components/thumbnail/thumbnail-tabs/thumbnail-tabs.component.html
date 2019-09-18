@@ -1,6 +1,25 @@
 <mat-tab-group mat-align-tabs="start">
   <mat-tab>
     <ng-template mat-tab-label>
+      Outer content
+      <app-thumbnail-dialog [contentMode]='thumbnailContentModes.postDetail' [mode]='thumbnailDialogModes.add'
+        (thumbnailSaved)='onMainContentSaved($event)' *ngIf="post.content === null"></app-thumbnail-dialog>
+    </ng-template>
+
+    <ng-template matTabContent>
+      <div class="emptyThumbnail tab-content" *ngIf="post.content === null">
+        <span class="h3">No Outer Content</span>
+      </div>
+      <div class="thumbnail-container" *ngIf="post.content !== null">
+        <app-thumbnail-view [thumbnail]="post.content" (thumbnailEdited)='onContentEdited($event)'
+          (thumbnailDeleted)="onContentDeleted($event)">
+        </app-thumbnail-view>
+      </div>
+    </ng-template>
+
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
       Thumbnail
       <app-thumbnail-dialog [contentMode]='thumbnailContentModes.thumbnail' [mode]='thumbnailDialogModes.add'
         (thumbnailSaved)='onSaved($event)' *ngIf="post.thumbnail === null"></app-thumbnail-dialog>
@@ -21,7 +40,7 @@
   <!-- Post detail-->
   <mat-tab>
     <ng-template mat-tab-label>
-      Add Content
+      Add Inner Content
       <app-thumbnail-dialog [contentMode]='thumbnailContentModes.postDetail' [mode]='thumbnailDialogModes.add'
         (thumbnailSaved)='onSaved($event)'></app-thumbnail-dialog>
     </ng-template>

@@ -24,6 +24,12 @@ export class SideNavMenuService {
       authRoles: ['Chief editor', 'admin']
     },
     {
+      label: 'Authors',
+      routerLink: 'authors',
+      icon: 'people',
+      authRoles: ['Chief editor', 'admin', 'editor']
+    },
+    {
       label: 'Posts',
       routerLink: 'posts',
       icon: 'notes',

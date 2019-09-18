@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CloudinaryModule } from '@cloudinary/angular-5.x';
 import { Cloudinary } from 'cloudinary-core';
 import { environment } from 'src/environments/environment';
+import { AuthorsModule } from './pages/authors/authors.module';
 
 export const cloudinaryLib = {
   Cloudinary: Cloudinary
@@ -26,6 +27,7 @@ export const cloudinaryLib = {
     IssuesModule,
     CategoriesModule,
     HttpClientModule,
+    AuthorsModule,
     CloudinaryModule.forRoot(cloudinaryLib,
       {
         cloud_name: environment.cloudinary_cloud_name,

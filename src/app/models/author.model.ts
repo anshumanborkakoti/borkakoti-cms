@@ -5,6 +5,16 @@ import { CmsClass } from './general-class.interface';
 
 export class Author extends User implements CmsClass<Author> {
 
+  *[Symbol.iterator]() {
+    yield this.name;
+    yield this.username;
+    yield this.id;
+    yield this.email;
+    yield this.address;
+    yield this.roles;
+    //yield* this.details;
+  }
+
   constructor(
     public name: string = '',
     public username: string = '',
@@ -13,7 +23,7 @@ export class Author extends User implements CmsClass<Author> {
     public email: string = '',
     public address: string = '',
     public roles: string[] = [],
-    private details: Thumbnail = null
+    public details: Thumbnail = null
   ) {
     super(name, username, password, id, email, address, roles);
   }

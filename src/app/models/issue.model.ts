@@ -1,18 +1,13 @@
 import { Tag } from './tag.model';
 import { Thumbnail } from './thumbnail.model';
-import { isCmsClassesEqual, cloneCmsClass } from '../common/util/utils';
+import { cloneCmsClass } from '../common/util/utils';
 
 export class Issue implements Tag<Issue> {
   equals(that: Issue): boolean {
     if (!that) {
       return false;
     }
-    return this.name === that.name
-      && this.id === that.id
-      && this.label === that.label
-      && isCmsClassesEqual(this.thumbnail, that.thumbnail)
-      && this.published === that.published
-      && this.archived === that.archived;
+    return this.id === that.id;
   }
   clone(): Issue {
     return new Issue(
@@ -21,7 +16,9 @@ export class Issue implements Tag<Issue> {
       this.label,
       cloneCmsClass(this.thumbnail),
       this.published,
-      this.archived
+      this.archived,
+      this.pdfUrl,
+      this.latest
     );
   }
   constructor(
@@ -30,7 +27,9 @@ export class Issue implements Tag<Issue> {
     public label = '',
     public thumbnail: Thumbnail = null,
     public published: boolean = false,
-    public archived: boolean = false
+    public archived: boolean = false,
+    public pdfUrl: string = null,
+    public latest: boolean = false
   ) {
 
   }

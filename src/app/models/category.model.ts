@@ -1,6 +1,6 @@
 import { Tag } from './tag.model';
 import { Thumbnail } from './thumbnail.model';
-import { isCmsClassesEqual, cloneCmsClass } from '../common/util/utils';
+import { cloneCmsClass } from '../common/util/utils';
 
 export class Category implements Tag<Category> {
 

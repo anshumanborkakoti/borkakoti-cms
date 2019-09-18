@@ -81,7 +81,7 @@ export class PostsDetailComponent implements OnInit {
 
   private initForm() {
     this.postForm = new FormGroup({
-      label: new FormControl(this.post.label, [Validators.required]),
+      label: new FormControl(this.post.label, [Validators.required, Validators.maxLength(15)]),
       approved: new FormControl(this.post.approved),
       archived: new FormControl(this.post.archived),
       category: new FormControl(this.post.category.id, [Validators.required]),
@@ -109,6 +109,7 @@ export class PostsDetailComponent implements OnInit {
   savePost() {
     console.log(this.postForm);
     console.log(this.post.thumbnail);
+    //Call save service
   }
 
   onTabsChanged(data: Post) {

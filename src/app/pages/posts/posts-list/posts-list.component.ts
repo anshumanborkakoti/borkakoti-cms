@@ -15,7 +15,7 @@ export class PostsListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   dataSource: MatTableDataSource<Post>;
-  displayedColumns: string[] = ['select', 'label', 'issues', 'categories', 'published', 'approved', 'archived', 'actions'];
+  displayedColumns: string[] = ['select', 'label', 'authors', 'issues', 'categories', 'published', 'approved', 'archived', 'actions'];
   selection = new SelectionModel<Post>(true, []);
   private postSubscription: Subscription;
   private filterValue: string;

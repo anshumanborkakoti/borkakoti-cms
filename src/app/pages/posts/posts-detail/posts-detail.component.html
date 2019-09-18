@@ -1,10 +1,23 @@
 <form [formGroup]="postForm">
+  <mat-toolbar>
+    <button mat-raised-button color="primary" type="button"
+      [disabled]="!postForm.valid || postForm.pristine || postForm.untouched" (click)="savePost()">
+      Save
+    </button>
+    <span class="fill-remaining-space"></span>
+
+    <button mat-raised-button color="warn" routerLink="/posts" type="button">
+      Cancel
+    </button>
+  </mat-toolbar>
   <div class="layout">
     <span>
       <mat-form-field>
         <input type="text" formControlName="label" matInput placeholder="Post name" required
           [errorStateMatcher]="myErrorStateMatcher" />
-        <mat-error>Please enter a name for the post</mat-error>
+        <mat-hint>Name the post with maximum 15 characters</mat-hint>
+        <mat-error *ngIf="showErrorIf('label','required', postForm)">Please enter a name for the post</mat-error>
+        <mat-error *ngIf="showErrorIf('label','maxlength', postForm)">15 characters max!</mat-error>
       </mat-form-field>
     </span>
     <div class="mat-form-field-wrapper" *ngIf="post.assignedTo">
@@ -43,6 +56,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field>
+      <mat-label>Authors</mat-label>
       <mat-select multiple formControlName="authors" [errorStateMatcher]="myErrorStateMatcher" required>
         <mat-option *ngFor="let author of allAuthors" [value]="author.id">
           {{ author.name }}
@@ -51,16 +65,14 @@
       <mat-error>Please provide at least one author</mat-error>
     </mat-form-field>
   </div>
-  <mat-divider></mat-divider>
   <section>
-    <mat-toolbar>
-      <span class="fill-remaining-space">Posts - Maximum TODO</span>
+    <mat-toolbar color="accent">
+      <span class="fill-remaining-space">Content - Maximum TODO</span>
     </mat-toolbar>
     <app-thumbnail-tabs [post]="post" (tabsChanged)="onTabsChanged($event)"></app-thumbnail-tabs>
   </section>
-  <mat-divider></mat-divider>
   <section>
-    <mat-toolbar>
+    <mat-toolbar color="primary">
       <span class="fill-remaining-space">Edits</span>
     </mat-toolbar>
     <mat-form-field class="edit-comment">
@@ -96,8 +108,15 @@
     </mat-expansion-panel>
 
   </section>
+  <mat-toolbar>
+    <button mat-raised-button color="primary" type="button"
+      [disabled]="!postForm.valid || postForm.pristine || postForm.untouched" (click)="savePost()">
+      Save
+    </button>
+    <span class="fill-remaining-space"></span>
+    <button mat-raised-button color="accent" routerLink="/posts" type="button">
+      Cancel
+    </button>
+  </mat-toolbar>
 
-  <button type="button" color="accent" (click)="savePost()" mat-raised-button>
-    Save
-  </button>
 </form>

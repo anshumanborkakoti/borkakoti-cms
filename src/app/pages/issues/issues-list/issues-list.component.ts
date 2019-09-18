@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IssuesService } from 'src/app/services/issues.service';
 
 @Component({
   selector: 'app-issues-list',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class IssuesListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private issuesService: IssuesService) { }
 
   ngOnInit() {
   }

@@ -80,4 +80,22 @@ export class ThumbnailTabsComponent implements OnInit {
       this.post.detail.splice(index, 1);
     }
   }
+
+  onMainContentSaved(data: PostDetail) {
+    this.post.content = data.clone();
+    this.tabsChanged.emit(this.post);
+  }
+
+  onContentDeleted(data: boolean, index: number) {
+    if (data === true) {
+      this.post.content = null;;
+    }
+  }
+
+  onContentEdited(data: Thumbnail) {
+    console.log('Content edited');
+    console.log(data);
+    this.post.content = data.clone();
+    this.tabsChanged.emit(this.post);
+  }
 }
