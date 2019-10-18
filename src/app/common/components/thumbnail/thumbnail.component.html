@@ -63,7 +63,7 @@
     </fieldset>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions>
+<mat-dialog-actions *ngIf="!inlineMode">
   <button mat-button color="accent" [disabled]="!thumbnailForm.valid || (thumbnailForm.valid && !thumbnailForm.dirty)"
     (click)="saveData()">Save</button>
   <mat-divider [vertical]="true" [inset]='true'></mat-divider>

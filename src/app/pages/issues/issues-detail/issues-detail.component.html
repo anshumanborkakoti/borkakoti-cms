@@ -1,1 +1,42 @@
-<p>issues-detail works!</p>
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput placeHolder='Name' formControlName="name" required aria-required="true" />
+    <mat-error *ngIf="showErrorIf('name','required', form)">Please enter a Name for the Issue</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Label</mat-label>
+    <input matInput placeHolder='Label' formControlName="label" required aria-required="true" />
+    <mat-error *ngIf="showErrorIf('label','required', form)">Please enter a Label for the Issue</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>PDF URL</mat-label>
+    <input matInput placeHolder='PDF Url' formControlName="pdfUrl" required aria-required="true" />
+    <mat-error *ngIf="showErrorIf('label','required', form)">Please provide a PDF URL for the Issue</mat-error>
+  </mat-form-field>
+  <mat-checkbox formControlName="published">
+    <mat-label>Published</mat-label>
+  </mat-checkbox>
+
+  <mat-checkbox formControlName="archived">
+    <mat-label>Archived</mat-label>
+  </mat-checkbox>
+
+  <mat-checkbox formControlName="latest">
+    <mat-label>Latest</mat-label>
+  </mat-checkbox>
+  <app-thumbnail [thumbnail]="currentIssue.thumbnail" [inlineMode]=true [saveThumbnail]="saveThumbnail"
+    (formStatusChange)="onThumbnailStatusChanged($event)"></app-thumbnail>
+
+</form>
+<mat-toolbar>
+  <button mat-raised-button color="primary" type="button" [disabled]="!form.valid || form.pristine || form.untouched"
+    (click)="saveIssue()">
+    Save
+  </button>
+  <span class="fill-remaining-space"></span>
+  <button mat-raised-button color="accent" routerLink="/issues" type="button">
+    Cancel
+  </button>
+</mat-toolbar>

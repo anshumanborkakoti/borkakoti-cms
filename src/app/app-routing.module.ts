@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
-import { IssuesListComponent } from './pages/issues/issues-list/issues-list.component';
 import { CategoriesListComponent } from './pages/categories/categories-list/categories-list.component';
 import { AuthorsComponent } from './pages/authors/authors.component';
 
@@ -11,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'issues',
-    component: IssuesListComponent,
+    loadChildren: () => import('./pages/issues/issues.module').then(m => m.IssuesModule),
   },
   {
     path: 'authors',

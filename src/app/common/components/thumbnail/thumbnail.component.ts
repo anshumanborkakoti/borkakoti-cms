@@ -10,6 +10,7 @@ import { FROALA_EDITOR_OPTIONS } from '../../froala-editor/options.froala';
 import { PostDetail } from 'src/app/models/post-detail.model';
 import { APPTHUMBNAIL_CONTENT_COMPONENT_MODES } from '../../util/constants';
 import { showErrorIf } from '../../util/utils';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-thumbnail',
@@ -20,8 +21,11 @@ import { showErrorIf } from '../../util/utils';
 })
 export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() thumbnail: Thumbnail | PostDetail;
+  @Input() saveThumbnail: Observable<void>;
+  @Input() inlineMode = false;
   @Input() mode: string = APPTHUMBNAIL_CONTENT_COMPONENT_MODES.thumbnail;
   @Output() thumbnailSaved = new EventEmitter<Thumbnail | PostDetail>();
+  @Output() formStatusChange = new EventEmitter<string>();
 
   clImages: Image[];
   mediaLibrary: any;
@@ -29,6 +33,7 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
   thumbnailErrorStateMatcher = new MyErrorStateMatcher();
   froalaOptions = FROALA_EDITOR_OPTIONS;
   showErrorIf = showErrorIf;
+  saveSubscription: Subscription;
 
   constructor(
     private window: WindowRef,
@@ -46,6 +51,14 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
       content: new FormControl(this.thumbnail.content),
       caption: new FormControl(this.thumbnail.caption, Validators.maxLength(100)),
       footer: new FormControl(this.thumbnail.footer, Validators.maxLength(50))
+    });
+    if (this.saveThumbnail) {
+      this.saveSubscription = this.saveThumbnail.subscribe(() => this.saveData());
+    }
+    // Emit initial form state
+    this.formStatusChange.next(this.thumbnailForm.status);
+    this.thumbnailForm.statusChanges.subscribe(status => {
+      this.formStatusChange.next(status);
     });
   }
 
@@ -129,6 +142,7 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.mediaLibrary = null;
     this.thumbnailForm = null;
+    this.saveSubscription.unsubscribe();
   }
 
 }

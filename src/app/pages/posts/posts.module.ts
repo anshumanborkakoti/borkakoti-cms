@@ -30,7 +30,6 @@ const routes: Routes = [
     AppMaterialModuleModule,
     RouterModule.forChild(routes),
     ThumbnailModule
-  ],
-  exports: [RouterModule]
+  ]
 })
 export class PostsModule { }
