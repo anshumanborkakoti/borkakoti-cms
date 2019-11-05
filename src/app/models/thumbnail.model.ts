@@ -16,7 +16,7 @@ export class Thumbnail implements CmsClass<Thumbnail>{
   }
 
   constructor(
-    public id = makeid(10),
+    public id = null,
     public image: Image = new Image(),
     public caption: string = '',
     public content: string = '',

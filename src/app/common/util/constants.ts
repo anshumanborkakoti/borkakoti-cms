@@ -8,3 +8,8 @@ export const APPTHUMBNAILDIALOG_MODE = {
   edit: 'EDIT',
   add: 'ADD'
 };
+
+export const DETAIL_MODES = {
+  update: 'update',
+  create: 'create'
+};

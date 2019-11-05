@@ -124,8 +124,9 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
             // __proto__: Array(0)
             // mlId: "ml_0"
             // __proto__: Object
+            const oldId = this.thumbnail.image.id;
             data.assets.forEach(aAsset => {
-              this.thumbnail.image = new Image(aAsset.public_id, aAsset.format, aAsset.tags, aAsset.secure_url, aAsset.url);
+              this.thumbnail.image = new Image(aAsset.public_id, aAsset.format, aAsset.tags, aAsset.secure_url, aAsset.url, oldId);
             });
             this.thumbnailForm.get('image').setValue(this.thumbnail.image.publicId);
           }

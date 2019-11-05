@@ -27,7 +27,7 @@
     <mat-label>Latest</mat-label>
   </mat-checkbox>
   <app-thumbnail [thumbnail]="currentIssue.thumbnail" [inlineMode]=true [saveThumbnail]="saveThumbnail"
-    (formStatusChange)="onThumbnailStatusChanged($event)"></app-thumbnail>
+    (formStatusChange)="onThumbnailStatusChanged($event)" (thumbnailSaved)="onThumbnailSaved($event)"></app-thumbnail>
 
 </form>
 <mat-toolbar>

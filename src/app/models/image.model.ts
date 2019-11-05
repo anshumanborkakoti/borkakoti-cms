@@ -5,11 +5,7 @@ export class Image implements CmsClass<Image> {
     if (!that) {
       return false;
     }
-    return this.publicId === that.publicId
-      && this.format === that.format
-      && this.secureUrl === that.secureUrl
-      && this.url === that.url
-      && JSON.stringify(this.tags) === JSON.stringify(that.tags);
+    return this.id === that.id;
   }
   clone() {
     return new Image(
@@ -17,7 +13,8 @@ export class Image implements CmsClass<Image> {
       this.format,
       [...this.tags],
       this.secureUrl,
-      this.url
+      this.url,
+      this.id
     );
   }
   constructor(
@@ -25,7 +22,8 @@ export class Image implements CmsClass<Image> {
     public format: string = '',
     public tags: string[] = [],
     public secureUrl: string = '',
-    public url: string = ''
+    public url: string = '',
+    public id: string = null
   ) {
   }
 }

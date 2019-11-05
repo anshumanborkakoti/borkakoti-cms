@@ -22,19 +22,21 @@ export class IssuesListComponent implements OnInit {
   constructor(private issuesService: IssuesService) { }
 
   ngOnInit() {
-    const allIssues = this.issuesService.getAllIssues();
-
-    this.dataSource = new MatTableDataSource<Issue>(allIssues);
+    this.issuesService.getIssuesChanged().subscribe(
+      issues => {
+        if (Array.isArray(issues)) {
+          this.dataSource.data = [...issues];
+        } else {
+          this.dataSource.data = [issues.clone()];
+        }
+      }
+    );
+    this.dataSource = new MatTableDataSource<Issue>([]);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.issueSubscription = this.issuesService.getIssuesChanged().subscribe(issue => {
-      if (Array.isArray(issue)) {
-        this.dataSource.data = [...issue];
-      } else {
-        this.dataSource.data = [issue.clone()];
-      }
-    });
+    this.issuesService.getAllIssues();
   }
+
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;

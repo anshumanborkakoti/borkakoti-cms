@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const path = require("path");
 const userRouter = require("./routes/users");
+const issueRouter = require("./routes/issue.router");
 
 const mongoose = require("mongoose");
 mongoose
@@ -40,4 +41,5 @@ app.use((req, res, next) => {
 });
 
 app.use("/tljneapi/users", userRouter);
+app.use("/tljneapi/issues", issueRouter);
 module.exports = app;

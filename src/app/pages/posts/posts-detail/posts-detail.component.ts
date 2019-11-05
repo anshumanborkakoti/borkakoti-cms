@@ -53,7 +53,13 @@ export class PostsDetailComponent implements OnInit {
   }
 
   private initIssues() {
-    this.allIssues = this.issueService.getAllIssues();
+    this.issueService.getIssuesChanged().subscribe(issues => {
+      if (Array.isArray(issues)) {
+        this.allIssues = issues.slice();
+      }
+    });
+    this.issueService.getAllIssues();
+
   }
 
   private initAuthors() {

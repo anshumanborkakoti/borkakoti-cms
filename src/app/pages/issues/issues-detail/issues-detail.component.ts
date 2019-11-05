@@ -6,6 +6,7 @@ import { Issue } from 'src/app/models/issue.model';
 import { Thumbnail } from 'src/app/models/thumbnail.model';
 import * as utils from 'src/app/common/util/utils';
 import { Subject } from 'rxjs';
+import { DETAIL_MODES } from 'src/app/common/util/constants';
 
 @Component({
   selector: 'app-issues-detail',
@@ -18,11 +19,13 @@ export class IssuesDetailComponent implements OnInit, OnDestroy {
   currentIssue: Issue;
   showErrorIf = utils.showErrorIf;
   saveThumbnail = new Subject<void>();
+  private mode: string;
 
   constructor(private issuesService: IssuesService, private activeRoute: ActivatedRoute) { }
 
   ngOnInit() {
     const issueId = this.activeRoute.snapshot.paramMap.get('id');
+    this.mode = this.activeRoute.snapshot.queryParamMap.get('mode');
     this.currentIssue = this.issuesService.getIssue(issueId);
     if (!this.currentIssue) {
       this.currentIssue = new Issue();
@@ -48,6 +51,40 @@ export class IssuesDetailComponent implements OnInit, OnDestroy {
       });
     } else if (status === 'VALID') {
       this.form.get('thumbnail').setErrors(null);
+    }
+  }
+
+  onThumbnailSaved(thumbnail: Thumbnail) {
+    const values = this.form.value;
+
+    if (this.mode === DETAIL_MODES.create) {
+      // New issue
+      const issue = new Issue(
+        values.name,
+        null,
+        values.label,
+        thumbnail.clone(),
+        values.published,
+        values.archived,
+        values.pdfUrl,
+        values.latest,
+        //TODO posts
+      );
+      this.issuesService.saveIssue(issue);
+    } else if (this.mode === DETAIL_MODES.update) {
+      // Update issue
+      const issue = new Issue(
+        values.name,
+        this.currentIssue.id,
+        values.label,
+        thumbnail.clone(),
+        values.published,
+        values.archived,
+        values.pdfUrl,
+        values.latest,
+        //TODO posts
+      );
+      this.issuesService.updateIssue(issue);
     }
   }
 
