@@ -12,14 +12,14 @@ export class Author extends User implements CmsClass<Author> {
     yield this.email;
     yield this.address;
     yield this.roles;
-    //yield* this.details;
+    // yield* this.details;
   }
 
   constructor(
     public name: string = '',
     public username: string = '',
     public password: string = '',
-    public id: string = makeid(10),
+    public id: string = null,
     public email: string = '',
     public address: string = '',
     public roles: string[] = [],

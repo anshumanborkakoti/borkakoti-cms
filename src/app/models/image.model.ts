@@ -1,6 +1,14 @@
 import { CmsClass } from './general-class.interface';
 
 export class Image implements CmsClass<Image> {
+  *[Symbol.iterator]() {
+    yield this.publicId;
+    yield this.format;
+    yield this.tags;
+    yield this.secureUrl;
+    yield this.url;
+    yield this.id;
+  }
   equals(that: Image): boolean {
     if (!that) {
       return false;

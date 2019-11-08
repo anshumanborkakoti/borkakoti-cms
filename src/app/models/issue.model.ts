@@ -1,7 +1,6 @@
 import { Tag } from './tag.model';
 import { Thumbnail } from './thumbnail.model';
-import { cloneCmsClass, cloneCmsClassArray } from '../common/util/utils';
-import { Post } from './post.model';
+import { cloneCmsClass } from '../common/util/utils';
 
 export class Issue implements Tag<Issue> {
   equals(that: Issue): boolean {
@@ -19,8 +18,7 @@ export class Issue implements Tag<Issue> {
       this.published,
       this.archived,
       this.pdfUrl,
-      this.latest,
-      cloneCmsClassArray(this.posts)
+      this.latest
     );
   }
   constructor(
@@ -31,8 +29,7 @@ export class Issue implements Tag<Issue> {
     public published: boolean = false,
     public archived: boolean = false,
     public pdfUrl: string = null,
-    public latest: boolean = false,
-    public posts: Post[] = []
+    public latest: boolean = false
   ) {
 
   }

@@ -1,40 +1,40 @@
-const Issue = require('../models/issue.schema');
+const Category = require('../models/category.schema');
 const Thumbnail = require('../models/thumbnail.schema');
 const Image = require('../models/image.schema');
 const ImageController = require('../controllers/image.controller');
 const ThumbnailController = require('../controllers/thumbnail.controller');
 
-module.exports.getAllIssues = (req, res, error) => {
-  Issue.find()
+module.exports.getAllCategories = (req, res, error) => {
+  Category.find()
     .populate({
       path: 'thumbnail',
       populate: {
         path: 'image'
       }
     })
-    .then(issues => {
-      console.log(`getAllIssues() ${issues}`);
-      if (issues) {
+    .then(aCategories => {
+      console.log(`getAllCategories() ${aCategories}`);
+      if (aCategories) {
         res.status(200).json({
-          message: `${issues.length} number of issues fetched successfully`,
-          issues
+          message: `${aCategories.length} number of categories fetched successfully`,
+          categories: aCategories
         });
       } else {
         res.status(404).json({
-          message: `No issues found!`
+          message: `No categories found!`
         });
       }
     },
       reason => {
         res.status(500).json({
-          message: `Error in getAllIssues  because ${reason}`
+          message: `Error in getAllCategories because ${reason}`
         });
       });
 };
 
-module.exports.saveIssue = (req, res, error) => {
+module.exports.saveCategory = (req, res, error) => {
   console.log({ ...req.body });
-  const { name, label, thumbnail, published, archived, pdfUrl, latest } = req.body;
+  const { name, label, thumbnail, minPostDetail, maxPostDetail } = req.body;
   const imageToSave = {
     ...thumbnail.image
   };
@@ -52,32 +52,30 @@ module.exports.saveIssue = (req, res, error) => {
         .save(thumbnailToSave)
         .then(savedThumbnail => {
           console.log(`Thumbnail saved ${savedThumbnail}`);
-          const issueToSave = new Issue({
+          const categoryToSave = new Category({
             name,
             label,
             thumbnail: savedThumbnail._id,
-            published,
-            archived,
-            pdfUrl,
-            latest
+            minPostDetail,
+            maxPostDetail
           });
-          issueToSave.save().then(savedIssue => {
-            console.log(`Issue saved ${issueToSave}`);
-            savedIssue
+          categoryToSave.save().then(aSavedCategory => {
+            console.log(`Category saved ${categoryToSave}`);
+            aSavedCategory
               .populate({
                 path: 'thumbnail',
                 populate: {
                   path: 'image'
                 }
-              }, (error, populatedIssue) => {
+              }, (error, aPopulatedCategory) => {
                 if (error) {
                   res.status(500).json({
-                    message: `Population of ${issueToSave.name} failed. Reason ${error}`
+                    message: `Population of ${categoryToSave.name} failed. Reason ${error}`
                   });
                 } else {
                   res.status(200).json({
-                    message: `${issueToSave.name} saved successfully`,
-                    issue: populatedIssue
+                    message: `${categoryToSave.name} saved successfully`,
+                    category: aPopulatedCategory
                   });
                 }
               })
@@ -85,7 +83,7 @@ module.exports.saveIssue = (req, res, error) => {
           },
             reason => {
               res.status(500).json({
-                message: `Could not save Issue ${issueToSave.name} because ${reason}`
+                message: `Could not save Category ${categoryToSave.name} because ${reason}`
               })
             })
         })
@@ -102,9 +100,9 @@ module.exports.saveIssue = (req, res, error) => {
     });
 };
 
-module.exports.updateIssue = (req, res, error) => {
+module.exports.updateCategory = (req, res, error) => {
   console.log(req.body);
-  const { id, name, label, thumbnail, published, archived, pdfUrl, latest } = req.body;
+  const { id, name, label, thumbnail, minPostDetail, maxPostDetail } = req.body;
   const imageToSave = new Image({
     ...thumbnail.image,
     _id: thumbnail.image.id
@@ -127,44 +125,42 @@ module.exports.updateIssue = (req, res, error) => {
         .update(thumbnailToUpdate)
         .then(updatedData => {
           console.log(`Thumbnail updated ${thumbnailToUpdate}`);
-          const issueToSave = new Issue({
+          const categoryToSave = new Category({
             _id: id,
             name,
             label,
             thumbnail: thumbnailToUpdate._id,
-            published,
-            archived,
-            pdfUrl,
-            latest
+            minPostDetail,
+            maxPostDetail
           });
-          console.log(`issueToSave ${issueToSave}`);
-          Issue
-            .replaceOne({ _id: issueToSave._id }, issueToSave)
+          console.log(`categoryToSave ${categoryToSave}`);
+          Category
+            .replaceOne({ _id: categoryToSave._id }, categoryToSave)
             .then(updatedData => {
               //populate
-              issueToSave
+              categoryToSave
                 .populate({
                   path: 'thumbnail',
                   populate: {
                     path: 'image'
                   }
                 },
-                  (error, populatedIssue) => {
+                  (error, aPopulatedCategory) => {
                     if (error) {
                       res.status(500).json({
-                        message: ` Population of ${issueToSave.name} failed. Reason ${error}`
+                        message: ` Population of ${categoryToSave.name} failed. Reason ${error}`
                       });
                     } else {
                       res.status(200).json({
-                        message: `${issueToSave.name} updated successfully`,
-                        issue: populatedIssue
+                        message: `${categoryToSave.name} updated successfully`,
+                        category: aPopulatedCategory
                       });
                     }
                   });
             },
               reason => {
                 res.status(500).json({
-                  message: `Could not update Issue ${issueToSave.name} because ${reason}`
+                  message: `Could not update Category ${categoryToSave.name} because ${reason}`
                 })
               })
         },
@@ -182,30 +178,30 @@ module.exports.updateIssue = (req, res, error) => {
     );
 }
 
-module.exports.deleteIssues = (req, res, error) => {
-  const issues = req.params.ids.split(',');
+module.exports.deleteCategories = (req, res, error) => {
+  const categories = req.params.ids.split(',');
   let thumbnailIds = [];
 
   //Find thumbnail Ids
-  Issue
-    .find({ _id: { $in: issues } })
-    .then(issues => {
-      thumbnailIds = issues.map(issue => {
-        return issue.thumbnail;
+  Category
+    .find({ _id: { $in: categories } })
+    .then(categories => {
+      thumbnailIds = categories.map(aCategory => {
+        return aCategory.thumbnail;
       });
       ThumbnailController
         .deleteMany(thumbnailIds)
         .then(deletedData => {
-          Issue.deleteMany({ _id: { $in: issues } }).then(deletedData => {
+          Category.deleteMany({ _id: { $in: categories } }).then(deletedData => {
             res.status(200).json({
-              message: `Issues ${issues} deleted successfully`,
+              message: `Categories ${categories} deleted successfully`,
               deletedCount: deletedData.deletedCount
             });
           },
-            //Issue error
+            //Category error
             reason => {
               res.status(500).json({
-                message: `Could not delete issues ${issues} because ${reason}`
+                message: `Could not delete categories ${categories} because ${reason}`
               })
             })
         }).catch(error => {
@@ -216,9 +212,9 @@ module.exports.deleteIssues = (req, res, error) => {
         })
     })
     .catch(error => {
-      //Find issues error
+      //Find categories error
       res.status(500).json({
-        message: `Could not find issues ${issues} because ${error}`
+        message: `Could not find categories ${categories} because ${error}`
       })
     })
 

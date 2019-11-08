@@ -85,8 +85,7 @@ export class IssuesService implements OnDestroy {
                 issue.published,
                 issue.archived,
                 issue.pdfUrl,
-                issue.latest,
-                issue.posts
+                issue.latest
               );
             })
           };
@@ -133,8 +132,7 @@ export class IssuesService implements OnDestroy {
         savedIssue.published,
         savedIssue.archived,
         savedIssue.pdfUrl,
-        savedIssue.latest,
-        // TODO clone posts savedIssue.posts
+        savedIssue.latest
       )
     }
   }

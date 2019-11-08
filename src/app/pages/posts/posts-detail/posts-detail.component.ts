@@ -13,6 +13,7 @@ import { AuthorsService } from 'src/app/services/authors.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { IssuesService } from 'src/app/services/issues.service';
 import { Author } from 'src/app/models/author.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-posts-detail',
@@ -40,6 +41,8 @@ export class PostsDetailComponent implements OnInit {
   /** Authors */
   allAuthors: Author[];
 
+  private categorySubscription = new Subscription();
+
   constructor(
     private postService: PostService,
     private activatedRoute: ActivatedRoute,
@@ -49,7 +52,13 @@ export class PostsDetailComponent implements OnInit {
   ) { }
 
   private initCategories() {
-    this.allCategories = this.categoryService.getAllCategories();
+    this.categoryService.getAllCategories();
+    this.categorySubscription = this.categoryService.getCategoriesChanged()
+      .subscribe(aCategories => {
+        if (Array.isArray(aCategories)) {
+          this.allCategories = aCategories;
+        }
+      });
   }
 
   private initIssues() {

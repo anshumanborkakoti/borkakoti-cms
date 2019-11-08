@@ -4,6 +4,7 @@ const app = express();
 const path = require("path");
 const userRouter = require("./routes/users");
 const issueRouter = require("./routes/issue.router");
+const categoryRouter = require("./routes/category.router");
 
 const mongoose = require("mongoose");
 mongoose
@@ -46,4 +47,5 @@ app.use((req, res, next) => {
 
 app.use("/tljneapi/users", userRouter);
 app.use("/tljneapi/issues", issueRouter);
+app.use("/tljneapi/categories", categoryRouter);
 module.exports = app;

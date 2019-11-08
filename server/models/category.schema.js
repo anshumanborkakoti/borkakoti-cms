@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
-const issueSchema = mongoose.Schema({
+const categorySchema = mongoose.Schema({
   name: {
     required: true,
     type: String
@@ -14,18 +14,12 @@ const issueSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Thumbnail'
   },
-  published: {
-    type: Boolean
+  minPostDetail: {
+    type: Number
   },
-  archived: {
-    type: Boolean
-  },
-  pdfUrl: {
-    type: String
-  },
-  latest: {
-    type: Boolean
+  maxPostDetail: {
+    type: Number
   }
 });
 mongoose.plugin(uniqueValidator);
-module.exports = mongoose.model('Issue', issueSchema);
+module.exports = mongoose.model('Category', categorySchema);

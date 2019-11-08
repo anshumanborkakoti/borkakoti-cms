@@ -3,7 +3,15 @@ import { CmsClass } from './general-class.interface';
 import { cloneCmsClass, isCmsClassesEqual, makeid } from '../common/util/utils';
 
 
-export class Thumbnail implements CmsClass<Thumbnail>{
+export class Thumbnail implements CmsClass<Thumbnail> {
+  *[Symbol.iterator]() {
+    yield this.id;
+    yield* this.image;
+    yield this.caption;
+    yield this.content;
+    yield this.footer;
+    yield this.header;
+  }
   clone(): Thumbnail {
     return new Thumbnail(
       this.id,
@@ -16,7 +24,7 @@ export class Thumbnail implements CmsClass<Thumbnail>{
   }
 
   constructor(
-    public id = null,
+    public id: string = null,
     public image: Image = new Image(),
     public caption: string = '',
     public content: string = '',

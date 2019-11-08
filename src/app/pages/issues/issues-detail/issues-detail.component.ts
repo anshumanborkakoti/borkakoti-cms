@@ -81,8 +81,7 @@ export class IssuesDetailComponent implements OnInit, OnDestroy {
         values.published,
         values.archived,
         values.pdfUrl,
-        values.latest,
-        //TODO posts
+        values.latest
       );
       this.issuesService.saveIssue(issue);
     } else if (this.mode === DETAIL_MODES.update) {
@@ -95,8 +94,7 @@ export class IssuesDetailComponent implements OnInit, OnDestroy {
         values.published,
         values.archived,
         values.pdfUrl,
-        values.latest,
-        //TODO posts
+        values.latest
       );
       this.issuesService.updateIssue(issue);
     }
