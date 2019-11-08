@@ -1,4 +1,5 @@
-<form [formGroup]="form">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<form [formGroup]="form" *ngIf="!isLoading">
   <mat-form-field>
     <mat-label>Name</mat-label>
     <input matInput placeHolder='Name' formControlName="name" required aria-required="true" />
@@ -30,7 +31,7 @@
     (formStatusChange)="onThumbnailStatusChanged($event)" (thumbnailSaved)="onThumbnailSaved($event)"></app-thumbnail>
 
 </form>
-<mat-toolbar>
+<mat-toolbar *ngIf="!isLoading">
   <button mat-raised-button color="primary" type="button" [disabled]="!form.valid || form.pristine || form.untouched"
     (click)="saveIssue()">
     Save

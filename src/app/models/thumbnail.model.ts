@@ -32,12 +32,6 @@ export class Thumbnail implements CmsClass<Thumbnail>{
     if (!that) {
       return false;
     }
-    return this.id === that.id
-      && isCmsClassesEqual(this.image, that.image)
-      && this.caption === that.caption
-      && this.content === that.content
-      && this.footer === that.footer
-      && this.header === that.header
-      && this.maxCharCount === that.maxCharCount;
+    return this.id === that.id;
   }
 }

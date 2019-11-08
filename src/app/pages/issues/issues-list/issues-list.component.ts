@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, OnDestroy } from '@angular/core';
 import { IssuesService } from 'src/app/services/issues.service';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar } from '@angular/material';
 import { Issue } from 'src/app/models/issue.model';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs';
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './issues-list.component.html',
   styleUrls: ['./issues-list.component.scss']
 })
-export class IssuesListComponent implements OnInit {
+export class IssuesListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -18,11 +18,14 @@ export class IssuesListComponent implements OnInit {
   dataSource: MatTableDataSource<Issue>;
   selection = new SelectionModel<Issue>(true, []);
   private issueSubscription = new Subscription();
+  private loadingSubscription = new Subscription();
+  isLoading = false;
+  private isDeletedSubscription = new Subscription();
 
-  constructor(private issuesService: IssuesService) { }
+  constructor(private issuesService: IssuesService, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
-    this.issuesService.getIssuesChanged().subscribe(
+    this.issueSubscription = this.issuesService.getIssuesChanged().subscribe(
       issues => {
         if (Array.isArray(issues)) {
           this.dataSource.data = [...issues];
@@ -31,12 +34,26 @@ export class IssuesListComponent implements OnInit {
         }
       }
     );
+    this.loadingSubscription = this.issuesService.getIsLoading()
+      .subscribe(aIsLoading => this.isLoading = !!aIsLoading);
     this.dataSource = new MatTableDataSource<Issue>([]);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.isDeletedSubscription = this.issuesService.getIsDeleted()
+      .subscribe(isSaved => {
+        if (isSaved) {
+          this.snackBar.open('Deleted successfully', 'Deleted', { duration: 5000 });
+        }
+      });
     this.issuesService.getAllIssues();
   }
 
+  ngOnDestroy(): void {
+    this.issueSubscription.unsubscribe();
+    this.loadingSubscription.unsubscribe();
+    this.isDeletedSubscription.unsubscribe();
+
+  }
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -65,9 +82,11 @@ export class IssuesListComponent implements OnInit {
       return aIssue.id;
     });
     this.issuesService.deleteIssues(issueIds);
+    this.selection.clear();
   }
 
   deleteIssue(issueId: string) {
     this.issuesService.deleteIssue(issueId);
+    this.selection.clear();
   }
 }

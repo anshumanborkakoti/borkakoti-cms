@@ -143,7 +143,9 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.mediaLibrary = null;
     this.thumbnailForm = null;
-    this.saveSubscription.unsubscribe();
+    if (this.saveSubscription) {
+      this.saveSubscription.unsubscribe();
+    }
   }
 
 }

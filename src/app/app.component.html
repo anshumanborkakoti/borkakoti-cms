@@ -4,12 +4,7 @@
 <mat-sidenav-container>
   <mat-sidenav mode="side" opened>
     <mat-list>
-      <a
-        mat-list-item
-        *ngFor="let item of menuItems"
-        [routerLink]="item.routerLink"
-        routerLinkActive="link-active"
-      >
+      <a mat-list-item *ngFor="let item of menuItems" [routerLink]="item.routerLink" routerLinkActive="link-active">
         <mat-icon matListIcon>{{ item.icon }}</mat-icon>
         {{ item.label }}
       </a>

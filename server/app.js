@@ -13,7 +13,11 @@ mongoose
     // //process.env.MONGO_ATLAS_PASS +
     // 'znTSxedRPfAV38Vi' +
     // '@cluster0-rnjrw.mongodb.net/tljnesandbox',
-    { useNewUrlParser: true }
+    {
+      useNewUrlParser: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true
+    }
   )
   .then(() => {
     console.log("Connected to database");

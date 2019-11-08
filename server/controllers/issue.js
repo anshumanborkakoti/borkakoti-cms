@@ -1,6 +1,8 @@
 const Issue = require('../models/issue.schema');
 const Thumbnail = require('../models/thumbnail.schema');
 const Image = require('../models/image.schema');
+const ImageController = require('../controllers/image.controller');
+const ThumbnailController = require('../controllers/thumbnail.controller');
 
 module.exports.getAllIssues = (req, res, error) => {
   Issue.find()
@@ -10,7 +12,7 @@ module.exports.getAllIssues = (req, res, error) => {
         path: 'image'
       }
     })
-    // .populate('posts')
+    // TODO .populate('posts')
     .then(issues => {
       console.log(`getAllIssues() ${issues}`);
       if (issues) {
@@ -39,56 +41,73 @@ module.exports.saveIssue = (req, res, error) => {
     return accumulator + post.id;
   }, '');
 
-  const imageToSave = new Image({
+  const imageToSave = {
     ...thumbnail.image
-  });
-  imageToSave.save().then(savedImage => {
-    console.log(`Image saved: ${savedImage}`);
-    const thumbnailToSave = new Thumbnail({
-      image: savedImage._id,
-      content: thumbnail.content,
-      footer: thumbnail.footer,
-      header: thumbnail.header
-    });
-    thumbnailToSave.save().then(savedThumbnail => {
-      //TODO save posts
-      console.log(`Thumbnail saved ${savedThumbnail}`);
-      const issueToSave = new Issue({
-        name,
-        label,
-        thumbnail: savedThumbnail._id,
-        published,
-        archived,
-        pdfUrl,
-        latest,
-        posts: postIds
+  };
+  ImageController
+    .upsert(imageToSave)
+    .then(savedImageData => {
+      const thumbnailToSave = new Thumbnail({
+        image: savedImageData._id,
+        content: thumbnail.content,
+        footer: thumbnail.footer,
+        header: thumbnail.header,
+        caption: thumbnail.caption
       });
-      issueToSave.save().then(savedIssue => {
-        res.status(200).json({
-          message: `${savedIssue.name} saved successfully`,
-          issue: savedIssue
-        });
-      },
-        reason => {
+      ThumbnailController
+        .save(thumbnailToSave)
+        .then(savedThumbnail => {
+          //TODO save posts
+          console.log(`Thumbnail saved ${savedThumbnail}`);
+          const issueToSave = new Issue({
+            name,
+            label,
+            thumbnail: savedThumbnail._id,
+            published,
+            archived,
+            pdfUrl,
+            latest,
+            posts: postIds
+          });
+          issueToSave.save().then(savedIssue => {
+            console.log(`Issue saved ${issueToSave}`);
+            savedIssue
+              .populate({
+                path: 'thumbnail',
+                populate: {
+                  path: 'image'
+                }
+              }, (error, populatedIssue) => {
+                if (error) {
+                  res.status(500).json({
+                    message: `Population of ${issueToSave.name} failed. Reason ${error}`
+                  });
+                } else {
+                  res.status(200).json({
+                    message: `${issueToSave.name} saved successfully`,
+                    issue: populatedIssue
+                  });
+                }
+              })
+
+          },
+            reason => {
+              res.status(500).json({
+                message: `Could not save Issue ${issueToSave.name} because ${reason}`
+              })
+            })
+        })
+        .catch(reason => { //Catch Thumbnail rejection
           res.status(500).json({
-            message: `Could not save Issue ${issueToSave.name} because ${reason}`
+            message: `Could not save Thumbnail ${thumbnail.header} because ${reason}`
           })
-        })
-    },
-      reason => {
-        res.status(500).json({
-          message: `Could not save Thumbnail ${thumbnail.header} because ${reason}`
-        })
-      });
-  },
-    reason => {
+        });
+    })
+    .catch(reason => { //Catch image rejection
       res.status(500).json({
         message: `Could not save image ${imageToSave.publicId} because ${reason}`
-      })
-    }
-  );
-
-
+      });
+    });
 };
 
 module.exports.updateIssue = (req, res, error) => {
@@ -104,68 +123,118 @@ module.exports.updateIssue = (req, res, error) => {
     _id: thumbnail.image.id
   });
   console.log(`imageToSave ${imageToSave}`);
-  Image.replaceOne({ _id: imageToSave._id }, imageToSave).then(updatedData => {
-    console.log(`Image updated: ${updatedData}`);
-    const thumbnailToSave = new Thumbnail({
-      _id: thumbnail.id,
-      image: imageToSave._id,
-      content: thumbnail.content,
-      footer: thumbnail.footer,
-      header: thumbnail.header
-    });
-    console.log(`thumbnailToSave ${thumbnailToSave}`);
-    Thumbnail.replaceOne({ _id: thumbnailToSave._id }, thumbnailToSave).then(updatedData => {
-      //TODO save posts
-      console.log(`Thumbnail updated ${thumbnailToSave}`);
-      const issueToSave = new Issue({
-        _id: id,
-        name,
-        label,
-        thumbnail: thumbnailToSave._id,
-        published,
-        archived,
-        pdfUrl,
-        latest,
-        posts: postIds
+  ImageController
+    .upsert(imageToSave)
+    .then(updatedImageData => {
+      console.log(`Image updated: ${updatedImageData}`);
+      const thumbnailToUpdate = new Thumbnail({
+        _id: thumbnail.id,
+        image: updatedImageData._id,
+        content: thumbnail.content,
+        footer: thumbnail.footer,
+        header: thumbnail.header,
+        caption: thumbnail.caption
       });
-      console.log(`issueToSave ${issueToSave}`);
-      Issue.replaceOne({ _id: issueToSave._id }, issueToSave).then(updatedData => {
-        res.status(200).json({
-          message: `${issueToSave.name} updated successfully`,
-          issue: issueToSave
-        });
-      },
-        reason => {
-          res.status(500).json({
-            message: `Could not update Issue ${issueToSave.name} because ${reason}`
-          })
-        })
+      console.log(`thumbnailToUpdate ${thumbnailToUpdate}`);
+      ThumbnailController
+        .update(thumbnailToUpdate)
+        .then(updatedData => {
+          //TODO save posts
+          console.log(`Thumbnail updated ${thumbnailToUpdate}`);
+          const issueToSave = new Issue({
+            _id: id,
+            name,
+            label,
+            thumbnail: thumbnailToUpdate._id,
+            published,
+            archived,
+            pdfUrl,
+            latest,
+            posts: postIds
+          });
+          console.log(`issueToSave ${issueToSave}`);
+          Issue
+            .replaceOne({ _id: issueToSave._id }, issueToSave)
+            .then(updatedData => {
+              //populate
+              issueToSave
+                .populate({
+                  path: 'thumbnail',
+                  populate: {
+                    path: 'image'
+                  }
+                },
+                  (error, populatedIssue) => {
+                    if (error) {
+                      res.status(500).json({
+                        message: ` Population of ${issueToSave.name} failed. Reason ${error}`
+                      });
+                    } else {
+                      res.status(200).json({
+                        message: `${issueToSave.name} updated successfully`,
+                        issue: populatedIssue
+                      });
+                    }
+                  });
+            },
+              reason => {
+                res.status(500).json({
+                  message: `Could not update Issue ${issueToSave.name} because ${reason}`
+                })
+              })
+        },
+          reason => {
+            res.status(500).json({
+              message: `Could not update Thumbnail ${thumbnail.header} because ${reason}`
+            })
+          });
     },
       reason => {
         res.status(500).json({
-          message: `Could not update Thumbnail ${thumbnail.header} because ${reason}`
+          message: `Could not update image ${imageToSave.publicId} because ${reason}`
         })
-      });
-  },
-    reason => {
-      res.status(500).json({
-        message: `Could not update image ${imageToSave.publicId} because ${reason}`
-      })
-    }
-  );
+      }
+    );
 }
 
 module.exports.deleteIssues = (req, res, error) => {
   const issues = req.params.ids.split(',');
-  Issue.deleteMany({ _id: { $in: issues } }).then(deletedData => {
-    res.status(200).json({
-      message: `Issues ${issues} deleted successfully`,
-      deletedCount: deletedData.deletedCount
-    });
-  },
-    reason => {
+  let thumbnailIds = [];
+
+  //Find thumbnail Ids
+  Issue
+    .find({ _id: { $in: issues } })
+    .then(issues => {
+      thumbnailIds = issues.map(issue => {
+        return issue.thumbnail;
+      });
+      ThumbnailController
+        .deleteMany(thumbnailIds)
+        .then(deletedData => {
+          Issue.deleteMany({ _id: { $in: issues } }).then(deletedData => {
+            res.status(200).json({
+              message: `Issues ${issues} deleted successfully`,
+              deletedCount: deletedData.deletedCount
+            });
+          },
+            //Issue error
+            reason => {
+              res.status(500).json({
+                message: `Could not delete issues ${issues} because ${reason}`
+              })
+            })
+        }).catch(error => {
+          //Thumbnail error
+          res.status(500).json({
+            message: `Could not delete thumbnails ${thumbnailIds} because ${error}`
+          })
+        })
+    })
+    .catch(error => {
+      //Find issues error
       res.status(500).json({
-        message: `Could not delete issues ${issues} because ${reason}`
+        message: `Could not find issues ${issues} because ${error}`
       })
     })
+
 }

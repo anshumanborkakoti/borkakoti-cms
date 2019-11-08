@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { IssuesService } from 'src/app/services/issues.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Issue } from 'src/app/models/issue.model';
 import { Thumbnail } from 'src/app/models/thumbnail.model';
 import * as utils from 'src/app/common/util/utils';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { DETAIL_MODES } from 'src/app/common/util/constants';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-issues-detail',
@@ -19,9 +20,13 @@ export class IssuesDetailComponent implements OnInit, OnDestroy {
   currentIssue: Issue;
   showErrorIf = utils.showErrorIf;
   saveThumbnail = new Subject<void>();
+  isLoading = false;
   private mode: string;
+  private loadingSubscription = new Subscription();
+  private isSavedSubscription = new Subscription();
 
-  constructor(private issuesService: IssuesService, private activeRoute: ActivatedRoute) { }
+  constructor(private issuesService: IssuesService, private activeRoute: ActivatedRoute,
+    private router: Router, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     const issueId = this.activeRoute.snapshot.paramMap.get('id');
@@ -33,6 +38,8 @@ export class IssuesDetailComponent implements OnInit, OnDestroy {
     if (!this.currentIssue.thumbnail) {
       this.currentIssue.thumbnail = new Thumbnail();
     }
+    this.loadingSubscription = this.issuesService.getIsLoading()
+      .subscribe(aIsLoading => this.isLoading = !!aIsLoading);
     this.form = new FormGroup({
       name: new FormControl(this.currentIssue.name, [Validators.required]),
       label: new FormControl(this.currentIssue.label, [Validators.required]),
@@ -42,6 +49,13 @@ export class IssuesDetailComponent implements OnInit, OnDestroy {
       latest: new FormControl(this.currentIssue.latest),
       thumbnail: new FormControl(this.currentIssue.thumbnail)
     });
+    this.isSavedSubscription = this.issuesService.getIsSaved()
+      .subscribe(isSaved => {
+        if (isSaved) {
+          this.router.navigate(['issues']);
+          this.snackBar.open('Saved successfully', 'Saved', { duration: 5000 });
+        }
+      });
   }
 
   onThumbnailStatusChanged(status: string) {
@@ -94,6 +108,7 @@ export class IssuesDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveThumbnail.unsubscribe();
-
+    this.loadingSubscription.unsubscribe();
+    this.isSavedSubscription.unsubscribe();
   }
 }

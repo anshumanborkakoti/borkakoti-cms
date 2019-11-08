@@ -4,7 +4,7 @@ import { makeid } from '../common/util/utils';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { map, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Thumbnail } from '../models/thumbnail.model';
 import { Image } from '../models/image.model';
 
@@ -33,16 +33,25 @@ export class IssuesService implements OnDestroy {
   private isLoading = new BehaviorSubject(false);
   private allIssues: Issue[];
   private isSaved = new Subject<boolean>();
+  private isDeleted = new Subject<boolean>();
 
   constructor(private http: HttpClient) {
-
-    this.issuesChanged.subscribe(aIssues => {
-      this.mocks = aIssues;
-    });
   }
 
   getIssuesChanged(): Subject<Issue | Issue[]> {
     return this.issuesChanged;
+  }
+
+  getIsLoading(): BehaviorSubject<boolean> {
+    return this.isLoading;
+  }
+
+  getIsSaved(): Subject<boolean> {
+    return this.isSaved;
+  }
+
+  getIsDeleted(): Subject<boolean> {
+    return this.isDeleted;
   }
 
   getAllIssues(): void {
@@ -53,20 +62,14 @@ export class IssuesService implements OnDestroy {
         map(result => {
           return {
             issues: result.issues.map(issue => {
-              let img = null;
-              //TODO remove unnecessary check
-              if (!issue.thumbnail.image) {
-                img = new Image();
-              } else {
-                img = new Image(
-                  issue.thumbnail.image.publicId,
-                  issue.thumbnail.image.format,
-                  issue.thumbnail.image.tags,
-                  issue.thumbnail.image.secureUrl,
-                  issue.thumbnail.image.url,
-                  issue.thumbnail.image._id
-                );
-              }
+              const img = new Image(
+                issue.thumbnail.image.publicId,
+                issue.thumbnail.image.format,
+                issue.thumbnail.image.tags,
+                issue.thumbnail.image.secureUrl,
+                issue.thumbnail.image.url,
+                issue.thumbnail.image._id
+              );
               return new Issue(
                 issue.name,
                 issue._id,
@@ -90,7 +93,7 @@ export class IssuesService implements OnDestroy {
         })
       ).subscribe(issueData => {
         this.allIssues = issueData.issues.slice();
-        this.issuesChanged.next(this.allIssues);
+        this.issuesChanged.next(this.allIssues.slice());
         this.isLoading.next(false);
         this.isSaved.next(true);
       }, error => {
@@ -101,7 +104,7 @@ export class IssuesService implements OnDestroy {
   }
 
   getIssue(id: string): Issue {
-    return this.mocks.find(aIssue => aIssue.id === id);
+    return this.allIssues.find(aIssue => aIssue.id === id);
   }
 
   private mapSavedIssue = savedData => {
@@ -145,48 +148,64 @@ export class IssuesService implements OnDestroy {
       )
       .subscribe(transformedData => {
         console.log(`Issue services.saveIssue() ${{ ...transformedData.issue }}`);
-        this.allIssues.push(transformedData.issue);
+        this.allIssues.push(issue);
         this.issuesChanged.next(this.allIssues.slice());
         this.isLoading.next(false);
+        this.isSaved.next(true);
       }, error => {
         console.log('Error occurred ' + error.message);
         this.isLoading.next(false);
         this.isSaved.next(false);
-      })
+      });
   }
 
   updateIssue(issue: Issue) {
     this.isLoading.next(true);
+    const clonedIssue = issue.clone();
     this.http.put<{ message: string, issue: any }>
-      (`${environment.api_url}/issues`, issue.clone())
+      (`${environment.api_url}/issues`, clonedIssue)
       .pipe(
         map(this.mapSavedIssue)
       )
       .subscribe(transformedData => {
         console.log(`Issue services.updateIssue() ${{ ...transformedData.issue }}`);
+        const issueIndex = this.allIssues.findIndex(currentIssue => currentIssue.id === clonedIssue.id);
+        this.allIssues.splice(issueIndex, 1, clonedIssue);
         this.issuesChanged.next(this.allIssues.slice());
         this.isLoading.next(false);
+        this.isSaved.next(true);
       }, error => {
         console.log('Error occurred ' + error.message);
         this.isLoading.next(false);
         this.isSaved.next(false);
-      })
+      });
   }
 
   deleteIssue(issueid: string) {
-    const deleted = this.mocks.filter(aIssue => aIssue
+    this.isLoading.next(true);
+    const deleted = this.allIssues.filter(aIssue => aIssue
       .id !== issueid);
-    this.issuesChanged.next(deleted);
+    this.allIssues = deleted;
+    this.deleteIssues([issueid]);
   }
 
   deleteIssues(issueIds: string[]) {
+    this.isLoading.next(true);
     this.http.delete<{ message: string, deleteCount: number }>
       (`${environment.api_url}/issues/${issueIds}`)
       .subscribe(deletedData => {
         console.log(`Issues ${issueIds} deleted successfully`);
-        //this.issuesChanged.next();
+        const deleted = this.allIssues.filter(aIssue => {
+          return !issueIds.some(id => id === aIssue.id);
+        });
+        this.allIssues = deleted;
+        this.isLoading.next(false);
+        this.issuesChanged.next(this.allIssues.slice());
+        this.isDeleted.next(true);
       }, error => {
         console.log('Error occurred ' + error.message);
+        this.isLoading.next(false);
+        this.isDeleted.next(false);
       });
   }
   ngOnDestroy() {

@@ -29,12 +29,10 @@ export class UsersDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.savedSub = this.userService.getIsSavedObservable().subscribe(asaved => {
       this.isSaving = false;
-
       // When saved, navigate
       if (asaved === true) {
         this.router.navigate(['/users']);
       }
-
     });
   }
 
