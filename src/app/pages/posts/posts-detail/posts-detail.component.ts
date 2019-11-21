@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Post } from 'src/app/models/post.model';
 import { PostService } from '../posts.service';
@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './posts-detail.component.html',
   styleUrls: ['./posts-detail.component.scss']
 })
-export class PostsDetailComponent implements OnInit {
+export class PostsDetailComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -42,6 +42,15 @@ export class PostsDetailComponent implements OnInit {
   allAuthors: Author[];
 
   private categorySubscription = new Subscription();
+  private authorSubscription = new Subscription();
+  private issuesSubscription = new Subscription();
+
+  ngOnDestroy(): void {
+    this.categorySubscription.unsubscribe();
+    this.issuesSubscription.unsubscribe();
+    this.authorSubscription.unsubscribe();
+  }
+
 
   constructor(
     private postService: PostService,
@@ -62,7 +71,7 @@ export class PostsDetailComponent implements OnInit {
   }
 
   private initIssues() {
-    this.issueService.getIssuesChanged().subscribe(issues => {
+    this.issuesSubscription = this.issueService.getIssuesChanged().subscribe(issues => {
       if (Array.isArray(issues)) {
         this.allIssues = issues.slice();
       }
@@ -72,7 +81,10 @@ export class PostsDetailComponent implements OnInit {
   }
 
   private initAuthors() {
-    this.allAuthors = this.authorService.getAllAuthors();
+    this.authorSubscription = this.authorService
+      .getAuthorsObservable()
+      .subscribe(authors => this.allAuthors = authors.slice());
+    this.authorService.getAuthors();
   }
 
   ngOnInit() {
@@ -80,9 +92,9 @@ export class PostsDetailComponent implements OnInit {
     this.post = this.postService.getPost(postid);
     if (!this.post) {
       this.post = new Post();
-      this.post.category = this.categoryService.MOCK_CATEGORY;
-      this.post.issues = this.issueService.MOCK_ISSUES;
-      this.post.authors = this.authorService.MOCK_AUTHORS;
+      this.post.category = null;
+      this.post.issues = [];
+      this.post.authors = [];
     } else {
       this.post = this.post.clone();
     }

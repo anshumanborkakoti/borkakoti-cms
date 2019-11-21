@@ -35,3 +35,13 @@ export class Image implements CmsClass<Image> {
   ) {
   }
 }
+export function createImage({ id, publicId, format, tags, secureUrl, url, _id }): Image {
+  return new Image(
+    publicId,
+    format,
+    [...tags],
+    secureUrl,
+    url,
+    _id || id || null
+  );
+}

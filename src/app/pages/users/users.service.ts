@@ -73,7 +73,7 @@ export class UsersService {
             message: savedData.message,
             user: new User(saveduser.name, saveduser.username, saveduser.password, saveduser._id, saveduser.email,
               saveduser.address, saveduser.roles)
-          }
+          };
         })
       )
       .subscribe(transformedData => {

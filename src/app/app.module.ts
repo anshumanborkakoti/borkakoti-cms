@@ -9,7 +9,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CloudinaryModule } from '@cloudinary/angular-5.x';
 import { Cloudinary } from 'cloudinary-core';
 import { environment } from 'src/environments/environment';
-import { AuthorsModule } from './pages/authors/authors.module';
 import { ErrorComponent } from './error/error.component';
 import { ErrorInterceptor } from './error/error.interceptor';
 
@@ -25,7 +24,6 @@ export const cloudinaryLib = {
     BrowserAnimationsModule,
     AppMaterialModuleModule,
     HttpClientModule,
-    AuthorsModule,
     CloudinaryModule.forRoot(cloudinaryLib,
       {
         cloud_name: environment.cloudinary_cloud_name,

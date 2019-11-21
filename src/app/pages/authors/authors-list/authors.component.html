@@ -1,0 +1,69 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <h1>Authors</h1>
+    <span class="fill-remaining-space"></span>
+    <button mat-icon-button type="button" id="addAuthor" color="primary" aria-label="add an author" routerLink="detail"
+      matTooltip="Add an Author" routerLink="detail" [queryParams]="{mode: 'create'}">
+      <mat-icon>add</mat-icon>
+    </button>
+
+    <button mat-icon-button type="button" id="deleteAuthor" color="primary" aria-label="delete selected authors"
+      (click)="deleteSelectedAuthors()" matTooltip="Delete selected authors">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="!isLoading">
+
+  <!-- Checkbox Column -->
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+      </mat-checkbox>
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let author"> {{author.name}} </td>
+  </ng-container>
+
+  <!-- Email Column -->
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef> Email </th>
+    <td mat-cell *matCellDef="let author"> {{author.email}} </td>
+  </ng-container>
+
+  <!-- Actions column -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let author">
+      <button mat-icon-button type="button" color="accent" aria-label="edit author" matTooltip="Edit author"
+        [routerLink]="['detail', author.id]" [queryParams]="{mode: 'update'}">
+        <mat-icon>create</mat-icon>
+      </button>
+      <button mat-icon-button type="button" color="warn" aria-label="delete author" (click)="deleteAuthor(author.id)"
+        matTooltip="Delete author">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+  </tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons *ngIf="!isLoading"></mat-paginator>
+
+<div class="no-author-message" *ngIf="dataSource.data.length === 0 && !isLoading">
+  No Authors to display!
+</div>

@@ -141,7 +141,6 @@ module.exports.updateIssue = (req, res, error) => {
           Issue
             .replaceOne({ _id: issueToSave._id }, issueToSave)
             .then(updatedData => {
-              //populate
               issueToSave
                 .populate({
                   path: 'thumbnail',

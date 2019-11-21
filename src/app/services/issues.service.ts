@@ -5,8 +5,7 @@ import { Subject, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { Thumbnail } from '../models/thumbnail.model';
-import { Image } from '../models/image.model';
+import { createThumbnail } from '../models/thumbnail.model';
 
 
 @Injectable({
@@ -62,26 +61,11 @@ export class IssuesService implements OnDestroy {
         map(result => {
           return {
             issues: result.issues.map(issue => {
-              const img = new Image(
-                issue.thumbnail.image.publicId,
-                issue.thumbnail.image.format,
-                issue.thumbnail.image.tags,
-                issue.thumbnail.image.secureUrl,
-                issue.thumbnail.image.url,
-                issue.thumbnail.image._id
-              );
               return new Issue(
                 issue.name,
                 issue._id,
                 issue.label,
-                new Thumbnail(
-                  issue.thumbnail._id,
-                  img,
-                  issue.thumbnail.caption,
-                  issue.thumbnail.content,
-                  issue.thumbnail.footer,
-                  issue.thumbnail.header
-                ),
+                createThumbnail(issue.thumbnail),
                 issue.published,
                 issue.archived,
                 issue.pdfUrl,
@@ -114,21 +98,7 @@ export class IssuesService implements OnDestroy {
         savedIssue.name,
         savedIssue._id,
         savedIssue.label,
-        new Thumbnail(
-          savedIssue.thumbnail._id,
-          new Image(
-            savedIssue.thumbnail.image.publicId,
-            savedIssue.thumbnail.image.format,
-            savedIssue.thumbnail.image.tags,
-            savedIssue.thumbnail.image.secureUrl,
-            savedIssue.thumbnail.image.url,
-            savedIssue.thumbnail.image._id
-          ),
-          savedIssue.thumbnail.caption,
-          savedIssue.thumbnail.content,
-          savedIssue.thumbnail.footer,
-          savedIssue.thumbnail.header
-        ),
+        createThumbnail(savedIssue.thumbnail),
         savedIssue.published,
         savedIssue.archived,
         savedIssue.pdfUrl,

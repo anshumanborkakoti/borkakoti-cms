@@ -4,21 +4,12 @@ import { Subject, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { Image } from '../models/image.model';
-import { Thumbnail } from '../models/thumbnail.model';
+import { createThumbnail } from '../models/thumbnail.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService implements OnDestroy {
-
-  get CATEGORY_NONE(): Category {
-    return new Category('none', '-1', 'None');
-  }
-
-  get MOCK_CATEGORY(): Category {
-    return new Category('Poetry', '123', 'Poetry');
-  }
 
   private categoriesChanged = new Subject<Category[]>();
   private isLoading = new BehaviorSubject(false);
@@ -53,26 +44,11 @@ export class CategoryService implements OnDestroy {
         map(result => {
           return {
             categories: result.categories.map(category => {
-              const img = new Image(
-                category.thumbnail.image.publicId,
-                category.thumbnail.image.format,
-                category.thumbnail.image.tags,
-                category.thumbnail.image.secureUrl,
-                category.thumbnail.image.url,
-                category.thumbnail.image._id
-              );
               return new Category(
                 category.name,
                 category._id,
                 category.label,
-                new Thumbnail(
-                  category.thumbnail._id,
-                  img,
-                  category.thumbnail.caption,
-                  category.thumbnail.content,
-                  category.thumbnail.footer,
-                  category.thumbnail.header
-                )
+                createThumbnail(category.thumbnail)
               );
             })
           };
@@ -101,21 +77,7 @@ export class CategoryService implements OnDestroy {
         savedCategory.name,
         savedCategory._id,
         savedCategory.label,
-        new Thumbnail(
-          savedCategory.thumbnail._id,
-          new Image(
-            savedCategory.thumbnail.image.publicId,
-            savedCategory.thumbnail.image.format,
-            savedCategory.thumbnail.image.tags,
-            savedCategory.thumbnail.image.secureUrl,
-            savedCategory.thumbnail.image.url,
-            savedCategory.thumbnail.image._id
-          ),
-          savedCategory.thumbnail.caption,
-          savedCategory.thumbnail.content,
-          savedCategory.thumbnail.footer,
-          savedCategory.thumbnail.header
-        )
+        createThumbnail(savedCategory.thumbnail)
       )
     }
   }

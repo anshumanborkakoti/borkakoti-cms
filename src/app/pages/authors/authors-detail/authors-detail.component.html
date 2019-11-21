@@ -1,0 +1,31 @@
+<mat-spinner *ngIf="isLoading "></mat-spinner>
+<form [formGroup]="form" *ngIf="!isLoading">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput placeHolder='Name' formControlName="name" required aria-required="true" />
+    <mat-error *ngIf="showErrorIf('name','required', form)">Please enter the author's name</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input matInput placeHolder='Email' formControlName="email" required />
+    <mat-error *ngIf="showErrorIf('email','email', form)">Please enter a valid email</mat-error>
+    <mat-error *ngIf="showErrorIf('email','required', form)">Please enter the author's email</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Address</mat-label>
+    <textarea id="address" cols="20" rows="10" formControlName="address" matInput placeholder="Address"></textarea>
+  </mat-form-field>
+  <app-thumbnail [thumbnail]="currentAuthor.details" [inlineMode]=true [saveThumbnail]="saveThumbnail"
+    (formStatusChange)="onThumbnailStatusChanged($event)" (thumbnailSaved)="onThumbnailSaved($event)"></app-thumbnail>
+
+</form>
+<mat-toolbar *ngIf="!isLoading">
+  <button mat-raised-button color="primary" type="button" [disabled]="!form.valid || form.pristine || form.untouched"
+    (click)="saveAuthor()">
+    Save
+  </button>
+  <span class="fill-remaining-space"></span>
+  <button mat-raised-button color="accent" routerLink="/authors" type="button">
+    Cancel
+  </button>
+</mat-toolbar>

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
-import { AuthorsComponent } from './pages/authors/authors.component';
 
 const routes: Routes = [
   {
@@ -13,7 +12,7 @@ const routes: Routes = [
   },
   {
     path: 'authors',
-    component: AuthorsComponent,
+    loadChildren: () => import('./pages/authors/authors.module').then(m => m.AuthorsModule)
   },
   {
     path: 'categories',

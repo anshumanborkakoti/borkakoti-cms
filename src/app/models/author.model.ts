@@ -16,13 +16,13 @@ export class Author extends User implements CmsClass<Author> {
   }
 
   constructor(
-    public name: string = '',
-    public username: string = '',
-    public password: string = '',
-    public id: string = null,
-    public email: string = '',
-    public address: string = '',
-    public roles: string[] = [],
+    name: string = '',
+    username: string = '',
+    password: string = '',
+    id: string = null,
+    email: string = '',
+    address: string = '',
+    roles: string[] = ['Author'],
     public details: Thumbnail = null
   ) {
     super(name, username, password, id, email, address, roles);

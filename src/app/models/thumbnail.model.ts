@@ -1,7 +1,6 @@
-import { Image } from './image.model';
+import { createImage, Image } from './image.model';
 import { CmsClass } from './general-class.interface';
 import { cloneCmsClass, isCmsClassesEqual, makeid } from '../common/util/utils';
-
 
 export class Thumbnail implements CmsClass<Thumbnail> {
   *[Symbol.iterator]() {
@@ -42,4 +41,14 @@ export class Thumbnail implements CmsClass<Thumbnail> {
     }
     return this.id === that.id;
   }
+}
+export function createThumbnail({ _id, id, image, caption, content, footer, header }): Thumbnail {
+  return new Thumbnail(
+    _id || id || null,
+    createImage(image),
+    caption,
+    content,
+    footer,
+    header
+  );
 }
