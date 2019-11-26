@@ -1,268 +1,145 @@
 import { Injectable } from '@angular/core';
-import { Post } from 'src/app/models/post.model';
-import { PostDetail } from 'src/app/models/post-detail.model';
-import { Category } from 'src/app/models/category.model';
-import { Issue } from 'src/app/models/issue.model';
-import { BehaviorSubject } from 'rxjs';
-import { makeid } from 'src/app/common/util/utils';
-import { Edit } from 'src/app/models/edit.model';
-import { User } from 'src/app/models/user.model';
-import { Author } from 'src/app/models/author.model';
+import { Post, createPost } from 'src/app/models/post.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
+import { Subject, BehaviorSubject } from 'rxjs';
 
-const categories = new Category('Poetry', '123', 'Poetry');
-
-const issues: Issue[] = [
-  new Issue('April 2019', '1234', 'April 2019', null, true, false),
-  new Issue('May 2019', '5678', 'May 2019', null, true, false)
-];
-
-const anshuman = new User('Anshuman');
-const prarthana = new User('Prarthana');
-const shiron = new User('Shiron');
-const juti = new User('Juti');
-
-const anshumanAuthor = new Author('Anshuman author');
-const prarthanaAuthor = new Author('Prarthana author');
-
-let posts: Post[] = [
-  new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date()),
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    false,
-    null,
-    [new PostDetail()],
-    false,
-    categories,
-    issues,
-    'Post 1',
-    makeid(10)
-  ),
-  new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    true,
-    null,
-    [new PostDetail()],
-    true,
-    categories,
-    issues,
-    'Post 2',
-    makeid(10)
-  ),
-  new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    false,
-    null,
-    [new PostDetail()],
-    false,
-    categories,
-    issues,
-    'Post 3',
-    makeid(10)
-  ), new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    true,
-    null,
-    [new PostDetail()],
-    true,
-    categories,
-    issues,
-    'Post 4',
-    makeid(10)
-  ),
-  new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    false,
-    null,
-    [new PostDetail()],
-    false,
-    categories,
-    issues,
-    'Post 1',
-    makeid(10)
-  ),
-  new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    true,
-    null,
-    [new PostDetail()],
-    true,
-    categories,
-    issues,
-    'Post 2',
-    makeid(10)
-  ),
-  new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    false,
-    null,
-    [new PostDetail()],
-    false,
-    categories,
-    issues,
-    'Post 3',
-    makeid(10)
-  ), new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    true,
-    null,
-    [new PostDetail()],
-    true,
-    categories,
-    issues,
-    'Post 4',
-    makeid(10)
-  ),
-  new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    false,
-    null,
-    [new PostDetail()],
-    false,
-    categories,
-    issues,
-    'Post 1',
-    makeid(10)
-  ),
-  new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    true,
-    null,
-    [new PostDetail()],
-    true,
-    categories,
-    issues,
-    'Post 2',
-    makeid(10)
-  ),
-  new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    false,
-    null,
-    [new PostDetail()],
-    false,
-    categories,
-    issues,
-    'Post 3',
-    makeid(10)
-  ), new Post(
-    [anshumanAuthor, prarthanaAuthor],
-    [
-      new Edit(anshuman, 'Hi There', new Date()),
-      new Edit(shiron, 'Edit 1', new Date()),
-      new Edit(prarthana, 'Redo', new Date()),
-      new Edit(juti, 'Edit 2', new Date()),
-      new Edit(prarthana, 'Approved!', new Date())
-    ],
-    true,
-    null,
-    [new PostDetail()],
-    true,
-    categories,
-    issues,
-    'Post 4',
-    makeid(10)
-  )
-];
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
-  private postsObservable = new BehaviorSubject<Post[]>(posts);
 
-  getPostObservable(): BehaviorSubject<Post[]> {
-    return this.postsObservable;
+  private postsChanged = new Subject<Post[]>();
+  private isLoading = new BehaviorSubject(false);
+  private allPosts: Post[];
+  private isSaved = new Subject<boolean>();
+  private isDeleted = new Subject<boolean>();
+  private get API_URL() {
+    return `${environment.api_url}/posts`;
   }
 
-  deletePosts(postIds: string[]) {
-    posts = posts.filter(aPost => {
-      return !postIds.some(id => aPost.id === id);
-    });
-    this.postsObservable.next(posts.slice());
+  constructor(private http: HttpClient) {
   }
 
-  getPost(postid: string) {
-    return posts.find(aPost => {
-      return aPost.id === postid;
-    });
+  getPostsChanged(): Subject<Post[]> {
+    return this.postsChanged;
+  }
+
+  getIsLoading(): BehaviorSubject<boolean> {
+    return this.isLoading;
+  }
+
+  getIsSaved(): Subject<boolean> {
+    return this.isSaved;
+  }
+
+  getIsDeleted(): Subject<boolean> {
+    return this.isDeleted;
+  }
+
+  getAllPosts(): void {
+    this.isLoading.next(true);
+    this.http.get<{ message: string, posts: any[] }>
+      (this.API_URL)
+      .pipe(
+        map(result => {
+          return {
+            message: result.message,
+            posts: result.posts.map(aPost => {
+              return createPost(aPost);
+            })
+          };
+        })
+      ).subscribe(postData => {
+        this.allPosts = postData.posts.slice();
+        this.postsChanged.next(this.allPosts.slice());
+        this.isLoading.next(false);
+      }, error => {
+        console.log(error.message);
+        this.isLoading.next(false);
+      });
+  }
+
+  getPost(id: string): Post {
+    return this.allPosts.find(aPost => aPost.id === id);
+  }
+
+  private mapSavedPost = (savedData: { message: string, post: any }) => {
+    return {
+      message: savedData.message,
+      post: createPost(savedData.post)
+    };
+  }
+
+  savePost(aPostToSave: Post) {
+    this.isLoading.next(true);
+    this.isSaved.next(false);
+    this.http.post<{ message: string, post: any }>
+      (this.API_URL, aPostToSave.clone())
+      .pipe(
+        map(this.mapSavedPost)
+      )
+      .subscribe(transformedData => {
+        console.log(`[savedPost] ${{ ...transformedData.post }}`);
+        this.allPosts.push(aPostToSave);
+        this.postsChanged.next(this.allPosts.slice());
+        this.isLoading.next(false);
+        this.isSaved.next(true);
+      }, error => {
+        console.log('Error occurred ' + error.message);
+        this.isLoading.next(false);
+        this.isSaved.next(false);
+      });
+  }
+
+  updatePost(aPost: Post) {
+    this.isLoading.next(true);
+    this.isSaved.next(false);
+    const aClonedPost = aPost.clone();
+    this.http.put<{ message: string, post: any }>
+      (this.API_URL, aClonedPost)
+      .pipe(
+        map(this.mapSavedPost)
+      )
+      .subscribe(transformedData => {
+        console.log(`updatePost() ${{ ...transformedData.post }}`);
+        const postIndex = this.allPosts.findIndex(aCurrentPost => aCurrentPost.id === aClonedPost.id);
+        this.allPosts.splice(postIndex, 1, aClonedPost);
+        this.postsChanged.next(this.allPosts.slice());
+        this.isLoading.next(false);
+        this.isSaved.next(true);
+      }, error => {
+        console.log('Error occurred ' + error.message);
+        this.isLoading.next(false);
+        this.isSaved.next(false);
+      });
+  }
+
+  deletePost(aPostId: string) {
+    this.isLoading.next(true);
+    const deleted = this.allPosts.filter(aPost => aPost
+      .id !== aPostId);
+    this.allPosts = deleted;
+    this.deletePosts([aPostId]);
+  }
+
+  deletePosts(aPostIds: string[]) {
+    this.isLoading.next(true);
+    this.http.delete<{ message: string, deleteCount: number }>
+      (`${this.API_URL}/${aPostIds}`)
+      .subscribe(deletedData => {
+        console.log(`Posts ${aPostIds} deleted successfully. Deleted count ${deletedData.deleteCount}`);
+        const deleted = this.allPosts.filter(aPost => {
+          return !aPostIds.some(id => id === aPost.id);
+        });
+        this.allPosts = deleted;
+        this.isLoading.next(false);
+        this.postsChanged.next(this.allPosts.slice());
+        this.isDeleted.next(true);
+      }, error => {
+        console.log('Error occurred ' + error.message);
+        this.isLoading.next(false);
+        this.isDeleted.next(false);
+      });
   }
 }

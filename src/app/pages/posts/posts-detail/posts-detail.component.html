@@ -10,6 +10,7 @@
       Cancel
     </button>
   </mat-toolbar>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
   <div class="layout">
     <span>
       <mat-form-field>
@@ -20,7 +21,7 @@
         <mat-error *ngIf="showErrorIf('label','maxlength', postForm)">15 characters max!</mat-error>
       </mat-form-field>
     </span>
-    <div class="mat-form-field-wrapper" *ngIf="post.assignedTo">
+    <div class="mat-form-field-wrapper" *ngIf="this.post.assignedTo">
       <mat-label>Assigned to</mat-label>
       {{ post.assignedTo.name }}
     </div>
@@ -39,7 +40,7 @@
       </mat-checkbox>
     </div>
     <mat-form-field>
-      <mat-label>Categories</mat-label>
+      <mat-label>Category</mat-label>
       <mat-select formControlName="category" [errorStateMatcher]="myErrorStateMatcher" required>
         <mat-option *ngFor="let category of allCategories" [value]="category.id">
           {{ category.label }}

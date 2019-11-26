@@ -1,5 +1,5 @@
 import { Tag } from './tag.model';
-import { Thumbnail } from './thumbnail.model';
+import { Thumbnail, createThumbnail } from './thumbnail.model';
 import { cloneCmsClass } from '../common/util/utils';
 
 export class Issue implements Tag<Issue> {
@@ -33,4 +33,21 @@ export class Issue implements Tag<Issue> {
   ) {
 
   }
+}
+export function createIssue({ name, _id, id, label, thumbnail, published, archived, pdfUrl, latest }): Issue {
+  return new Issue(
+    name,
+    _id || id || null,
+    label,
+    createThumbnail(thumbnail),
+    published,
+    archived,
+    pdfUrl,
+    latest
+  );
+}
+export function createIssues(issueArray: { name, _id, id, label, thumbnail, published, archived, pdfUrl, latest }[]): Issue[] {
+  return issueArray.map(aIssueOb => {
+    return createIssue(aIssueOb);
+  });
 }

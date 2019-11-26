@@ -6,6 +6,7 @@ const userRouter = require("./routes/users");
 const issueRouter = require("./routes/issue.router");
 const categoryRouter = require("./routes/category.router");
 const authorRouter = require("./routes/author.router");
+const postRouter = require("./routes/post.router");
 
 const mongoose = require("mongoose");
 mongoose
@@ -50,4 +51,5 @@ app.use("/tljneapi/users", userRouter);
 app.use("/tljneapi/issues", issueRouter);
 app.use("/tljneapi/categories", categoryRouter);
 app.use("/tljneapi/authors", authorRouter);
+app.use("/tljneapi/posts", postRouter);
 module.exports = app;

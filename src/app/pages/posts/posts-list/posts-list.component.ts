@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Post } from 'src/app/models/post.model';
 import { PostService } from '../posts.service';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs';
 
@@ -20,26 +20,40 @@ export class PostsListComponent implements OnInit, OnDestroy {
   private postSubscription: Subscription;
   private filterValue: string;
 
+  isLoading = false;
+  private loadingSubscription: Subscription;
+  private isDeletedSubscription = new Subscription();
 
-  constructor(private postsService: PostService) { }
+
+  constructor(private postsService: PostService, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
-    this.postSubscription = this.postsService.getPostObservable()
+    this.postSubscription = this.postsService.getPostsChanged()
       .subscribe(aPosts => {
-        if (!this.dataSource) {
-          this.dataSource = new MatTableDataSource<Post>(aPosts);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          this.dataSource.filter = this.filterValue;
-        }
-        this.dataSource.data = aPosts;
+        this.dataSource.data = [...aPosts];
         this.selection.clear();
       });
+    this.dataSource = new MatTableDataSource<Post>([]);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.filter = this.filterValue;
+
+    this.loadingSubscription = this.postsService.getIsLoading()
+      .subscribe(aIsLoading => this.isLoading = !!aIsLoading);
+    this.isDeletedSubscription = this.postsService.getIsDeleted()
+      .subscribe(isDeleted => {
+        if (isDeleted) {
+          this.snackBar.open('Deleted successfully', 'Deleted', { duration: 5000 });
+        }
+      });
+
+    this.postsService.getAllPosts();
   }
 
   ngOnDestroy(): void {
     this.postSubscription.unsubscribe();
-
+    this.loadingSubscription.unsubscribe();
+    this.isDeletedSubscription.unsubscribe();
   }
 
   applyFilter(filterValue: string) {
@@ -70,7 +84,7 @@ export class PostsListComponent implements OnInit, OnDestroy {
   }
 
   deletePost(postId: string) {
-    this.postsService.deletePosts([postId]);
+    this.postsService.deletePost(postId);
   }
 
 }

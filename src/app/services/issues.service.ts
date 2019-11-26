@@ -13,6 +13,7 @@ import { createThumbnail } from '../models/thumbnail.model';
 })
 export class IssuesService implements OnDestroy {
 
+  // TODO remove
   get MOCK_ISSUES(): Issue[] {
     return this.mocks;
   }

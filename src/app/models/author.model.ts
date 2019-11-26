@@ -1,6 +1,6 @@
 import { User } from './user.model';
-import { Thumbnail } from './thumbnail.model';
-import { makeid, cloneCmsClass } from '../common/util/utils';
+import { Thumbnail, createThumbnail } from './thumbnail.model';
+import { cloneCmsClass } from '../common/util/utils';
 import { CmsClass } from './general-class.interface';
 
 export class Author extends User implements CmsClass<Author> {
@@ -12,7 +12,7 @@ export class Author extends User implements CmsClass<Author> {
     yield this.email;
     yield this.address;
     yield this.roles;
-    // yield* this.details;
+    yield* this.details;
   }
 
   constructor(
@@ -39,4 +39,24 @@ export class Author extends User implements CmsClass<Author> {
       cloneCmsClass(this.details)
     );
   }
+}
+
+
+export function createAuthor({ name, username, password, id, _id, email, address, roles, details }): Author {
+  return new Author(
+    name,
+    username,
+    password,
+    _id || id || null,
+    email,
+    address,
+    roles,
+    createThumbnail(details)
+  );
+}
+
+export function createAuthors(authorArray: [{ name, username, password, id, _id, email, address, roles, details }]): Author[] {
+  return authorArray.map(aAuthorOb => {
+    return createAuthor(aAuthorOb);
+  });
 }

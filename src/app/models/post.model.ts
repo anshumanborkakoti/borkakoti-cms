@@ -1,12 +1,12 @@
-import { Thumbnail } from './thumbnail.model';
-import { PostDetail } from './post-detail.model';
-import { Edit } from './edit.model';
-import { Category } from './category.model';
-import { Issue } from './issue.model';
+import { Thumbnail, createThumbnail } from './thumbnail.model';
+import { PostDetail, createPostDetails, createPostDetail } from './post-detail.model';
+import { Edit, createEdits } from './edit.model';
+import { Category, createCategory } from './category.model';
+import { Issue, createIssues } from './issue.model';
 import { CmsClass } from './general-class.interface';
 import { cloneCmsClassArray, cloneCmsClass } from '../common/util/utils';
 import { User } from './user.model';
-import { Author } from './author.model';
+import { Author, createAuthors } from './author.model';
 
 export class Post implements CmsClass<Post> {
   equals(that: Post): boolean {
@@ -15,6 +15,21 @@ export class Post implements CmsClass<Post> {
     }
     return this.id === that.id;
   }
+
+  // *[Symbol.iterator]() {
+  //   yield* this.authors;
+  //   yield* this.editHistory;
+  //   yield this.archived;
+  //   yield* this.thumbnail;
+  //   yield* this.detail;
+  //   yield this.approved;
+  //   yield* this.category;
+  //   yield* this.issues;
+  //   yield this.label;
+  //   yield this.id;
+  //   yield* this.content;
+  //   yield this.assignedTo;
+  // }
   clone(): Post {
     return new Post(
       cloneCmsClassArray<Author>(this.authors),
@@ -27,7 +42,7 @@ export class Post implements CmsClass<Post> {
       cloneCmsClassArray<Issue>(this.issues),
       this.label,
       this.id,
-      this.content,
+      cloneCmsClass(this.content),
       this.assignedTo
     );
   }
@@ -55,5 +70,36 @@ export class Post implements CmsClass<Post> {
     }
     return this.issues.some(issue => issue.published === true);
   }
+}
 
+export function createPost(
+  {
+    authors,
+    editHistory,
+    archived,
+    thumbnail,
+    approved,
+    detail,
+    category,
+    issues,
+    label,
+    id,
+    _id,
+    content,
+    assignedTo
+  }): Post {
+  return new Post(
+    createAuthors(authors),
+    createEdits([...editHistory]),
+    archived,
+    createThumbnail(thumbnail),
+    createPostDetails(detail),
+    approved,
+    createCategory(category),
+    createIssues(issues),
+    label,
+    _id || id || null,
+    createPostDetail(content),
+    assignedTo
+  );
 }
