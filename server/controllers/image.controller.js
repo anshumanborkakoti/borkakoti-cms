@@ -3,13 +3,14 @@ const Image = require('../models/image.schema');
 /**
  * Save new or update
  */
-module.exports.upsert = ({ publicId, secureUrl, url, format, tags }) => {
+module.exports.upsert = ({ publicId, secureUrl, url, format, tags, credit }) => {
   const imageToSave = {
     publicId,
     secureUrl,
     url,
     format,
-    tags
+    tags,
+    credit
   };
   const promise = new Promise((resolve, reject) => {
     console.log(`imageToSave... ${imageToSave}`);
@@ -62,13 +63,14 @@ module.exports.upsertMany = aImagesToUpsertArray => {
   return new Promise((resolve, reject) => {
     let builkWriteOpts = [];
     [...aImagesToUpsertArray].forEach(aImage => {
-      const { publicId, secureUrl, url, format, tags } = aImage;
+      const { publicId, secureUrl, url, format, tags, credit } = aImage;
       const imageToSave = {
         publicId,
         secureUrl,
         url,
         format,
-        tags
+        tags,
+        credit
       };
       builkWriteOpts.push({
         updateOne: {

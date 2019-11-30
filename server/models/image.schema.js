@@ -18,6 +18,9 @@ const imageSchema = mongoose.Schema({
   },
   url: {
     type: String
+  },
+  credit: {
+    type: String
   }
 });
 mongoose.plugin(uniqueValidator);

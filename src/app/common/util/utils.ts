@@ -1,7 +1,5 @@
 import { CmsClass } from 'src/app/models/general-class.interface';
 import { FormGroup } from '@angular/forms';
-import { Image } from 'src/app/models/image.model';
-import { Thumbnail } from 'src/app/models/thumbnail.model';
 
 export function cloneCmsClassArray<T extends CmsClass<T>>(cArray: T[]): T[] {
   if (!cArray) {
