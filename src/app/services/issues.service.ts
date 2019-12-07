@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Issue } from '../models/issue.model';
-import { makeid } from '../common/util/utils';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -12,23 +11,6 @@ import { createThumbnail } from '../models/thumbnail.model';
   providedIn: 'root'
 })
 export class IssuesService implements OnDestroy {
-
-  // TODO remove
-  get MOCK_ISSUES(): Issue[] {
-    return this.mocks;
-  }
-
-  private mocks = [
-    new Issue('April 2019', makeid(10), 'April 2019', null, true, false),
-    new Issue('May 2019', makeid(10), 'May 2019', null, true, false),
-    new Issue('June 2019', makeid(10), 'June 2019', null, true, false),
-    new Issue('Dec 2019', makeid(10), 'Dec 2019', null, true, false),
-    new Issue('June 2019', makeid(10), 'June 2019', null, true, false),
-    new Issue('Dec 2019', makeid(10), 'Dec 2019', null, true, false),
-    new Issue('June 2019', makeid(10), 'June 2019', null, true, false),
-    new Issue('Dec 2019', makeid(10), 'Dec 2019', null, true, false)
-  ];
-
   private issuesChanged = new Subject<Issue[]>();
   private isLoading = new BehaviorSubject(false);
   private allIssues: Issue[];

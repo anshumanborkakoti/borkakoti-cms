@@ -1,5 +1,6 @@
 const Category = require('../models/category.schema');
 const ThumbnailController = require('../controllers/thumbnail.controller');
+const PostController = require('../controllers/post.controller');
 
 module.exports.getAllCategories = (req, res, error) => {
   Category.find()
@@ -159,38 +160,58 @@ module.exports.updateCategory = (req, res, error) => {
 
 module.exports.deleteCategoriesP = categoryIds => {
   const promise = new Promise((resolve, reject) => {
-    let thumbnailIds = [];
-    //Find thumbnail Ids
-    Category
-      .find({ _id: { $in: categoryIds } })
-      .then(categories => {
-        thumbnailIds = categories.map(aCategory => {
-          return aCategory.thumbnail;
-        });
-        ThumbnailController
-          .deleteMany(thumbnailIds)
-          .then(deletedData => {
-            Category.deleteMany({ _id: { $in: categoryIds } }).then(deletedData => {
-              resolve({
-                message: `Categories ${categoryIds} deleted successfully`,
-                deletedCount: deletedData.deletedCount
+    PostController
+      .postCountP({
+        category: { $in: categoryIds }
+      })
+      .then(aCount => {
+        const count = parseInt(aCount);
+        if (count > 0) {
+          console.error(`Cannot delete as there are ${count} posts associated with ${categoryIds}`);
+          reject({
+            message: `Cannot delete as there are ${count} posts associated with the category(ies)`
+          });
+        } else {
+          let thumbnailIds = [];
+          //Find thumbnail Ids
+          Category
+            .find({ _id: { $in: categoryIds } })
+            .then(categories => {
+              thumbnailIds = categories.map(aCategory => {
+                return aCategory.thumbnail;
               });
-            },
-              //Category error
-              reason => {
-                reject({
-                  message: `Could not delete categories ${categoryIds} because ${reason}`
+              ThumbnailController
+                .deleteMany(thumbnailIds)
+                .then(deletedData => {
+                  Category.deleteMany({ _id: { $in: categoryIds } }).then(deletedData => {
+                    resolve({
+                      message: `Categories ${categoryIds} deleted successfully`,
+                      deletedCount: deletedData.deletedCount
+                    });
+                  },
+                    //Category error
+                    reason => {
+                      reject({
+                        message: `Could not delete categories ${categoryIds} because ${reason}`
+                      })
+                    })
+                }).catch(error => {
+                  //Thumbnail error
+                  reject({
+                    message: `Could not delete thumbnails ${thumbnailIds} because ${error}`
+                  })
                 })
-              })
-          }).catch(error => {
-            //Thumbnail error
-            reject({
-              message: `Could not delete thumbnails ${thumbnailIds} because ${error}`
             })
-          })
+            .catch(error => {
+              //Find categories error
+              reject({
+                message: `Could not find categories ${categoryIds} because ${error}`
+              })
+            })
+        }
       })
       .catch(error => {
-        //Find categories error
+        // Count posts error
         reject({
           message: `Could not find categories ${categoryIds} because ${error}`
         })

@@ -1,5 +1,7 @@
 const Author = require('../models/author.schema');
 const ThumbnailController = require('../controllers/thumbnail.controller');
+const PostController = require('../controllers/post.controller');
+
 module.exports.getAuthors = (req, res, next) => {
   Author
     .find()
@@ -154,38 +156,57 @@ module.exports.updateAuthor = (req, res, error) => {
 
 module.exports.deleteAuthorsP = authorIds => {
   const promise = new Promise((resolve, reject) => {
-    let thumbnailIds = [];
-    //Find thumbnail Ids
-    Author
-      .find({ _id: { $in: authorIds } })
-      .then(authors => {
-        thumbnailIds = authors.map(author => {
-          return author.details;
-        });
-        ThumbnailController
-          .deleteMany(thumbnailIds)
-          .then(deletedData => {
-            Author.deleteMany({ _id: { $in: authorIds } }).then(deletedData => {
-              resolve({
-                message: `Authors ${authorIds} deleted successfully`,
-                deletedCount: deletedData.deletedCount
+    PostController
+      .postCountP({
+        authors: { $in: authorIds }
+      })
+      .then(aCount => {
+        const count = parseInt(aCount);
+        if (count > 0) {
+          console.error(`Cannot delete as there are ${count} posts associated with ${authorIds}`);
+          reject({
+            message: `Cannot delete as there are ${count} posts associated with the author(s)`
+          });
+        } else {
+          let thumbnailIds = [];
+          //Find thumbnail Ids
+          Author
+            .find({ _id: { $in: authorIds } })
+            .then(authors => {
+              thumbnailIds = authors.map(author => {
+                return author.details;
               });
-            },
-              //Author error
-              reason => {
-                reject({
-                  message: `Could not delete authors ${authorIds} because ${reason}`
+              ThumbnailController
+                .deleteMany(thumbnailIds)
+                .then(deletedData => {
+                  Author.deleteMany({ _id: { $in: authorIds } }).then(deletedData => {
+                    resolve({
+                      message: `Authors ${authorIds} deleted successfully`,
+                      deletedCount: deletedData.deletedCount
+                    });
+                  },
+                    //Author error
+                    reason => {
+                      reject({
+                        message: `Could not delete authors ${authorIds} because ${reason}`
+                      })
+                    })
+                }).catch(error => {
+                  //Thumbnail error
+                  reject({
+                    message: `Could not delete thumbnails ${thumbnailIds} because ${error}`
+                  })
                 })
-              })
-          }).catch(error => {
-            //Thumbnail error
-            reject({
-              message: `Could not delete thumbnails ${thumbnailIds} because ${error}`
             })
-          })
+            .catch(error => {
+              //Find authors error
+              reject({
+                message: `Could not find authors ${authorIds} because ${error}`
+              })
+            })
+        }
       })
       .catch(error => {
-        //Find authors error
         reject({
           message: `Could not find authors ${authorIds} because ${error}`
         })

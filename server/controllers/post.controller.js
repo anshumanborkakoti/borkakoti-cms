@@ -136,8 +136,28 @@ module.exports.getPostsP = filter => {
   });
 }
 
+function makeFilter(query) {
+  const { categoryid = null, issueids = null, approved = null,
+    postid = null } = query;
+  const filter = {};
+  if (postid) {
+    filter._id = postid;
+  }
+  if (categoryid) {
+    filter.category = categoryid
+  }
+  if (issueids && Array.isArray(issueids) && issueids.length > 0) {
+    filter.issues = { $in: issueids }
+  }
+  if (approved) {
+    filter.approved = (approved === 'true');
+  }
+  return filter;
+}
+
 module.exports.getPosts = (req, res, error) => {
-  this.getPostsP({})
+
+  this.getPostsP(makeFilter(req.query))
     .then(posts => {
       res.status(200).json({
         message: `Fetched ${posts.length} posts in getPosts()`,
@@ -288,5 +308,19 @@ module.exports.deletePosts = (req, res, error) => {
     .catch(reason => {
       res.status(500).json(reason);
     });
+}
+
+module.exports.postCountP = (query) => {
+  return new Promise((resolve, reject) => {
+    Post
+      .countDocuments(query)
+      .then(count => {
+        console.log(`Count of ${query} posts ${count}`);
+        resolve(count);
+      })
+      .catch(error => {
+        reject(error);
+      })
+  });
 }
 
