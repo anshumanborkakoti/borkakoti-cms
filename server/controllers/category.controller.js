@@ -1,6 +1,8 @@
 const Category = require('../models/category.schema');
 const ThumbnailController = require('../controllers/thumbnail.controller');
 const PostController = require('../controllers/post.controller');
+const Utils = require('../utils');
+
 
 module.exports.getAllCategories = (req, res, error) => {
   Category.find()
@@ -13,20 +15,28 @@ module.exports.getAllCategories = (req, res, error) => {
     .then(aCategories => {
       console.log(`getAllCategories() ${aCategories}`);
       if (aCategories) {
-        res.status(200).json({
-          message: `${aCategories.length} number of categories fetched successfully`,
-          categories: aCategories
-        });
+        res.status(200).json(
+          Utils.getInfoResponse(
+            `${aCategories.length} number of categories fetched successfully`,
+            { categories: aCategories }
+          )
+        );
       } else {
-        res.status(404).json({
-          message: `No categories found!`
-        });
+        res.status(404).json(
+          Utils.getErrorResponse(
+            `No categories found!`,
+            '404'
+          )
+        );
       }
     },
       reason => {
-        res.status(500).json({
-          message: `Error in getAllCategories because ${reason}`
-        });
+        res.status(500).json(
+          Utils.getErrorResponse(
+            `Error in getAllCategories`,
+            reason
+          )
+        );
       });
 };
 
@@ -53,28 +63,39 @@ module.exports.saveCategoryP = ({ name, label, thumbnail, minPostDetail, maxPost
               }
             }, (error, aPopulatedCategory) => {
               if (error) {
-                reject({
-                  message: `Population of ${categoryToSave.name} failed. Reason ${error}`
-                });
+                reject(
+                  Utils.getErrorResponse(
+                    `Population of ${categoryToSave.name} failed.`,
+                    error
+                  )
+                );
               } else {
-                resolve({
-                  message: `${categoryToSave.name} saved successfully`,
-                  category: aPopulatedCategory
-                });
+                resolve(
+                  Utils.getInfoResponse(
+                    `${categoryToSave.name} saved successfully`,
+                    { category: aPopulatedCategory }
+                  )
+                );
               }
             })
 
         },
           reason => {
-            reject({
-              message: `Could not save Category ${categoryToSave.name} because ${reason}`
-            })
+            reject(
+              Utils.getErrorResponse(
+                `Could not save Category ${categoryToSave.name}.`,
+                reason
+              )
+            )
           })
       })
       .catch(reason => { //Catch Thumbnail rejection
-        reject({
-          message: `Could not save Thumbnail ${thumbnail.header} because ${reason}`
-        })
+        reject(
+          Utils.getErrorResponse(
+            `Could not save Thumbnail ${thumbnail.header}.`,
+            reason
+          )
+        )
       });
   });
   return promise;
@@ -120,27 +141,38 @@ module.exports.updateCategoryP = ({ id, name, label, thumbnail, minPostDetail, m
               },
                 (error, aPopulatedCategory) => {
                   if (error) {
-                    reject({
-                      message: ` Population of ${categoryToSave.name} failed. Reason ${error}`
-                    });
+                    reject(
+                      Utils.getErrorResponse(
+                        `Population of ${categoryToSave.name} failed.`,
+                        error
+                      )
+                    );
                   } else {
-                    resolve({
-                      message: `${categoryToSave.name} updated successfully`,
-                      category: aPopulatedCategory
-                    });
+                    resolve(
+                      Utils.getInfoResponse(
+                        `${categoryToSave.name} updated successfully`,
+                        { category: aPopulatedCategory }
+                      )
+                    );
                   }
                 });
           },
             reason => {
-              reject({
-                message: `Could not update Category ${categoryToSave.name} because ${reason}`
-              })
+              reject(
+                Utils.getErrorResponse(
+                  `Could not update Category ${categoryToSave.name}.`,
+                  reason
+                )
+              )
             })
       },
         reason => {
-          reject({
-            message: `Could not update Thumbnail ${thumbnail.header} because ${reason}`
-          })
+          reject(
+            Utils.getErrorResponse(
+              `Could not update Thumbnail ${thumbnail.header}.`,
+              reason
+            )
+          )
         });
 
   });
@@ -167,10 +199,11 @@ module.exports.deleteCategoriesP = categoryIds => {
       .then(aCount => {
         const count = parseInt(aCount);
         if (count > 0) {
-          console.error(`Cannot delete as there are ${count} posts associated with ${categoryIds}`);
-          reject({
-            message: `Cannot delete as there are ${count} posts associated with the category(ies)`
-          });
+          reject(
+            Utils.getErrorResponse(
+              `Cannot delete as there are ${count} posts associated with the ${categoryIds}`
+            )
+          );
         } else {
           let thumbnailIds = [];
           //Find thumbnail Ids
@@ -184,37 +217,51 @@ module.exports.deleteCategoriesP = categoryIds => {
                 .deleteMany(thumbnailIds)
                 .then(deletedData => {
                   Category.deleteMany({ _id: { $in: categoryIds } }).then(deletedData => {
-                    resolve({
-                      message: `Categories ${categoryIds} deleted successfully`,
-                      deletedCount: deletedData.deletedCount
-                    });
+                    resolve(
+                      Utils.getInfoResponse(
+                        `Categories ${categoryIds} deleted successfully`,
+                        { deletedCount: deletedData.deletedCount }
+                      )
+                    );
                   },
                     //Category error
                     reason => {
-                      reject({
-                        message: `Could not delete categories ${categoryIds} because ${reason}`
-                      })
+                      reject(
+                        Utils.getErrorResponse(
+                          `Could not delete categories ${categoryIds}`,
+                          reason
+                        )
+                      )
                     })
                 }).catch(error => {
                   //Thumbnail error
-                  reject({
-                    message: `Could not delete thumbnails ${thumbnailIds} because ${error}`
-                  })
+                  reject(
+                    Utils.getErrorResponse(
+                      `Could not delete thumbnails ${thumbnailIds}`,
+                      error
+                    )
+                  )
                 })
             })
             .catch(error => {
               //Find categories error
-              reject({
-                message: `Could not find categories ${categoryIds} because ${error}`
-              })
+              reject(
+                Utils.getErrorResponse(
+                  `Could not find categories ${categoryIds}`,
+                  error
+                )
+              )
             })
         }
       })
       .catch(error => {
         // Count posts error
-        reject({
-          message: `Could not find categories ${categoryIds} because ${error}`
-        })
+        reject(
+          Utils.getErrorResponse(
+            `Could not find categories ${categoryIds}`,
+            error
+          )
+        )
       })
   })
   return promise;

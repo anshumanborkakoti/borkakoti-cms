@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  api_url: 'http://localhost:3000/tljneapi',
+  // api_url: 'http://localhost:3000/tljneapi',
+  api_url: 'http://tljne-env.kmhieh52tp.ap-south-1.elasticbeanstalk.com/tljneapi',
   cloudinary_cloud_name: 'dcom6pwyq',
   cloudinary_upload_preset: 'l3e7bqht',
   cloudinary_api_key: '434365393345825',

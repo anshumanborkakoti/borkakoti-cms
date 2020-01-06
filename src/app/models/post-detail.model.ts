@@ -14,7 +14,7 @@ export class PostDetail extends Thumbnail implements CmsClass<PostDetail> {
   }
 
   public get maxCharCount() {
-    return 5000;
+    return 10000;
   }
   clone(): PostDetail {
     return new PostDetail(

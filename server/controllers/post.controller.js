@@ -1,5 +1,6 @@
 const Post = require('../models/post.schema');
 const ThumbnailController = require('../controllers/thumbnail.controller');
+const Utils = require('../utils');
 
 module.exports.savePostP = ({ authors, editHistory, archived, thumbnail, detail,
   approved, category, issues, label, content, assignedTo }) => {
@@ -34,29 +35,37 @@ module.exports.savePostP = ({ authors, editHistory, archived, thumbnail, detail,
             this
               .getPostsP({ _id: response._id })
               .then(post => {
-                resolve({
-                  message: `Post ${label} saved successfully!`,
-                  post: post[0]
-                });
+                resolve(
+                  Utils.getInfoResponse(
+                    `Post ${label} saved successfully!`,
+                    { post: post[0] }
+                  )
+                );
               })
               .catch(error => {
-                reject({
-                  message: `Post ${label} failed to fetch because ${error}`,
-                  error
-                });
+                reject(
+                  Utils.getErrorResponse(
+                    `Post ${label} failed to fetch`,
+                    error
+                  )
+                );
               })
           })
           .catch(error => {
-            reject({
-              message: `Post ${label} failed to save because ${error}`,
-              error
-            });
+            reject(
+              Utils.getErrorResponse(
+                `Post ${label} failed to save `,
+                error
+              )
+            );
           })
       }).catch(error => {
-        reject({
-          message: `Thumbnail for Post ${label} failed to save because ${error}`,
-          error
-        });
+        reject(
+          Utils.getErrorResponse(
+            `Thumbnail for Post ${label} failed to save`,
+            error
+          )
+        );
       });
   });
 }
@@ -159,16 +168,18 @@ module.exports.getPosts = (req, res, error) => {
 
   this.getPostsP(makeFilter(req.query))
     .then(posts => {
-      res.status(200).json({
-        message: `Fetched ${posts.length} posts in getPosts()`,
-        posts
-      });
+      res.status(200).json(
+        Utils.getInfoResponse(
+          `Fetched ${posts.length} posts in getPosts()`,
+          { posts }
+        ));
     })
     .catch(reason => {
-      res.status(500).json({
-        message: 'Fetch posts failed!',
-        reason
-      });
+      res.status(500).json(
+        Utils.getErrorResponse(
+          `Fetch posts failed!`,
+          reason
+        ));
     })
 }
 
@@ -209,29 +220,37 @@ module.exports.updatePostP = ({ id, authors, editHistory, archived, thumbnail, d
             this
               .getPostsP({ _id: response._id })
               .then(post => {
-                resolve({
-                  message: `Post ${label} saved successfully!`,
-                  post: post[0]
-                });
+                resolve(
+                  Utils.getInfoResponse(
+                    `Post ${label} saved successfully!`,
+                    { post: post[0] }
+                  )
+                );
               })
               .catch(error => {
-                reject({
-                  message: `Post ${label} failed to fetch because ${error}`,
-                  error
-                });
+                reject(
+                  Utils.getErrorResponse(
+                    `Post ${label} failed to fetch`,
+                    error
+                  )
+                );
               })
           })
           .catch(error => {
-            reject({
-              message: `Post ${label} failed to save because ${error}`,
-              error
-            });
+            reject(
+              Utils.getErrorResponse(
+                `Post ${label} failed to save`,
+                error
+              )
+            );
           })
       }).catch(error => {
-        reject({
-          message: `Thumbnail for Post ${label} failed to save because ${error}`,
-          error
-        });
+        reject(
+          Utils.getErrorResponse(
+            `Thumbnail for Post ${label} failed to save`,
+            error
+          )
+        );
       });
   });
 }
@@ -271,29 +290,40 @@ module.exports.deletePostsP = postIds => {
             Post
               .deleteMany({ _id: { $in: postIds } })
               .then(deletedData => {
-                resolve({
-                  message: `Posts ${postIds} deleted successfully`,
-                  deletedCount: deletedData.deletedCount
-                });
+                resolve(
+                  Utils.getInfoResponse(
+                    `Posts ${postIds} deleted successfully`,
+                    { deletedCount: deletedData.deletedCount }
+                  )
+                );
               },
                 //Post error
                 reason => {
-                  reject({
-                    message: `Could not delete posts ${postIds} because ${reason}`
-                  })
+                  reject(
+                    Utils.getErrorResponse(
+                      `Could not delete posts ${postIds}`,
+                      reason
+                    )
+                  )
                 })
           }).catch(error => {
             //Thumbnail error
-            reject({
-              message: `Could not delete thumbnails ${thumbnailIds} because ${error}`
-            })
+            reject(
+              Utils.getErrorResponse(
+                `Could not delete thumbnails ${thumbnailIds}`,
+                error
+              )
+            )
           })
       })
       .catch(error => {
         //Find posts error
-        reject({
-          message: `Could not find posts ${postIds} because ${error}`
-        })
+        reject(
+          Utils.getErrorResponse(
+            `Could not find posts ${postIds}`,
+            error
+          )
+        )
       })
   });
 }

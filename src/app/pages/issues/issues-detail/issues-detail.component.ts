@@ -70,7 +70,7 @@ export class IssuesDetailComponent implements OnInit, OnDestroy {
 
   onThumbnailSaved(thumbnail: Thumbnail) {
     const values = this.form.value;
-
+    values.pdfUrl = encodeURI(values.pdfUrl);
     if (this.mode === DETAIL_MODES.create) {
       // New issue
       const issue = new Issue(

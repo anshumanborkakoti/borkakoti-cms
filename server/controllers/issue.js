@@ -1,6 +1,8 @@
 const Issue = require('../models/issue.schema');
 const ThumbnailController = require('../controllers/thumbnail.controller');
 const PostController = require('../controllers/post.controller');
+const Utils = require('../utils');
+
 
 function makeFilter({ published = null, latest = null }) {
   let filter = {};
@@ -28,20 +30,27 @@ module.exports.getAllIssues = (req, res, error) => {
     .then(issues => {
       console.log(`getAllIssues() ${issues}`);
       if (issues) {
-        res.status(200).json({
-          message: `${issues.length} number of issues fetched successfully`,
-          issues
-        });
+        res.status(200).json(
+          Utils.getInfoResponse(
+            `${issues.length} number of issues fetched successfully`,
+            { issues }
+          )
+        );
       } else {
-        res.status(404).json({
-          message: `No issues found!`
-        });
+        res.status(404).json(
+          Utils.getErrorResponse(
+            `No issues found!`
+          )
+        );
       }
     },
       reason => {
-        res.status(500).json({
-          message: `Error in getAllIssues  because ${reason}`
-        });
+        res.status(500).json(
+          Utils.getErrorResponse(
+            `Error in getAllIssues`,
+            reason
+          )
+        );
       });
 };
 
@@ -92,34 +101,48 @@ module.exports.saveIssueP = ({ name, label, thumbnail, published, archived, pdfU
                     }
                   }, (error, populatedIssue) => {
                     if (error) {
-                      reject({
-                        message: `Population of ${issueToSave.name} failed. Reason ${error}`
-                      });
+                      reject(
+                        Utils.getErrorResponse(
+                          `Population of ${issueToSave.name} failed.`,
+                          error
+                        )
+                      );
                     } else {
-                      resolve({
-                        message: `${issueToSave.name} saved successfully`,
-                        issue: populatedIssue
-                      });
+                      resolve(
+                        Utils.getInfoResponse(
+                          `${issueToSave.name} saved successfully`,
+                          { issue: populatedIssue }
+                        )
+                      );
                     }
                   })
 
               },
                 reason => {
-                  reject({
-                    message: `Could not save Issue ${issueToSave.name} because ${reason}`
-                  })
+                  reject(
+                    Utils.getErrorResponse(
+                      `Could not save Issue ${issueToSave.name}.`,
+                      reason
+                    )
+                  )
                 })
           })
           .catch(reason => { //Catch Thumbnail rejection
-            reject({
-              message: `Could not save Thumbnail ${thumbnail.header} because ${reason}`
-            })
+            reject(
+              Utils.getErrorResponse(
+                `Could not save Thumbnail ${thumbnail.header} .`,
+                reason
+              )
+            )
           });
       })
       .catch(error => {
-        reject({
-          message: `Setting latest false to issues failed. Reason ${error}`
-        });
+        reject(
+          Utils.getErrorResponse(
+            `Setting latest false to issues failed.`,
+            error
+          )
+        );
       });
 
   });
@@ -165,27 +188,38 @@ module.exports.updateIssueP = ({ id, name, label, thumbnail, published, archived
               },
                 (error, populatedIssue) => {
                   if (error) {
-                    reject({
-                      message: ` Population of ${issueToSave.name} failed. Reason ${error}`
-                    });
+                    reject(
+                      Utils.getErrorResponse(
+                        `Population of ${issueToSave.name} failed.`,
+                        error
+                      )
+                    );
                   } else {
-                    resolve({
-                      message: `${issueToSave.name} updated successfully`,
-                      issue: populatedIssue
-                    });
+                    resolve(
+                      Utils.getInfoResponse(
+                        `${issueToSave.name} updated successfully`,
+                        { issue: populatedIssue }
+                      )
+                    );
                   }
                 });
           },
             reason => {
-              reject({
-                message: `Could not update Issue ${issueToSave.name} because ${reason}`
-              })
+              reject(
+                Utils.getErrorResponse(
+                  `Could not update Issue ${issueToSave.name}`,
+                  reason
+                )
+              )
             })
       },
         reason => {
-          reject({
-            message: `Could not update Thumbnail ${thumbnail.header} because ${reason}`
-          })
+          reject(
+            Utils.getErrorResponse(
+              `Could not update Thumbnail ${thumbnail.header}`,
+              reason
+            )
+          )
         });
   });
   return promise;
@@ -212,9 +246,12 @@ module.exports.deleteIssuesP = issueIds => {
         const count = parseInt(aCount);
         if (count > 0) {
           console.error(`Cannot delete as there are ${count} posts associated with ${issueIds}`);
-          reject({
-            message: `Cannot delete as there are ${count} posts associated with the issue(s)`
-          });
+          reject(
+            Utils.getErrorResponse(
+              `Cannot delete as there are ${count} posts associated with the issue(s)`,
+              '404'
+            )
+          );
         } else {
           let thumbnailIds = [];
           //Find thumbnail Ids
@@ -228,36 +265,50 @@ module.exports.deleteIssuesP = issueIds => {
                 .deleteMany(thumbnailIds)
                 .then(deletedData => {
                   Issue.deleteMany({ _id: { $in: issueIds } }).then(deletedData => {
-                    resolve({
-                      message: `Issues ${issueIds} deleted successfully`,
-                      deletedCount: deletedData.deletedCount
-                    });
+                    resolve(
+                      Utils.getInfoResponse(
+                        `Issues ${issueIds} deleted successfully`,
+                        { deletedCount: deletedData.deletedCount }
+                      )
+                    );
                   },
                     //Issue error
                     reason => {
-                      reject({
-                        message: `Could not delete issues ${issueIds} because ${reason}`
-                      })
+                      reject(
+                        Utils.getErrorResponse(
+                          `Could not delete issues ${issueIds}`,
+                          reason
+                        )
+                      )
                     })
                 }).catch(error => {
                   //Thumbnail error
-                  reject({
-                    message: `Could not delete thumbnails ${thumbnailIds} because ${error}`
-                  })
+                  reject(
+                    Utils.getErrorResponse(
+                      `Could not delete thumbnails ${thumbnailIds}`,
+                      error
+                    )
+                  )
                 })
             })
             .catch(error => {
               //Find issues error
-              reject({
-                message: `Could not find issues ${issueIds} because ${error}`
-              })
+              reject(
+                Utils.getErrorResponse(
+                  `Could not delete issues ${thumbnailIds}`,
+                  error
+                )
+              )
             })
         }
       })
       .catch(error => {
-        reject({
-          message: `Could not find issues ${issueIds} because ${error}`
-        });
+        reject(
+          Utils.getErrorResponse(
+            `Could not find issues ${issueIds}`,
+            error
+          )
+        );
       })
   });
   return promise;

@@ -32,7 +32,7 @@ export class Thumbnail implements CmsClass<Thumbnail> {
 
   }
   public get maxCharCount() {
-    return 500;
+    return 1000;
   }
 
   public equals(that: Thumbnail): boolean {

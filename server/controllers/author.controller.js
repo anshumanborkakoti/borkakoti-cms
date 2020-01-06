@@ -1,6 +1,7 @@
 const Author = require('../models/author.schema');
 const ThumbnailController = require('../controllers/thumbnail.controller');
 const PostController = require('../controllers/post.controller');
+const util = require('../utils');
 
 module.exports.getAuthors = (req, res, next) => {
   Author
@@ -12,15 +13,9 @@ module.exports.getAuthors = (req, res, next) => {
       }
     })
     .then(authors => {
-      res.status(200).json({
-        message: `Fetched ${authors.length} authors in getAuthors()`,
-        authors
-      });
+      res.status(200).json(util.getInfoResponse(`Fetched ${authors.length} authors in getAuthors()`, { authors }));
     }, reason => {
-      res.status(500).json({
-        message: 'Fetch authors failed!',
-        reason
-      });
+      res.status(500).json(util.getErrorResponse(`Fetch authors failed!`, reason));
     });
 };
 
@@ -50,27 +45,29 @@ module.exports.saveAuthorP = ({ name, username, password, email, address, roles,
                 }
               }, (error, populatedAuthor) => {
                 if (error) {
-                  reject({
-                    message: `Population of Author ${tosave.name} failed. Reason ${error}`
-                  });
+                  reject(util.getErrorResponse(
+                    `Population of Author ${tosave.name} failed.`,
+                    error
+                  ));
                 } else {
-                  resolve({
-                    message: `${tosave.name} saved successfully`,
-                    author: populatedAuthor
-                  });
+                  resolve(util.getInfoResponse(
+                    `${tosave.name} saved successfully`,
+                    { author: populatedAuthor }
+                  ));
                 }
               })
             }, reason => {
-              reject({
-                message: 'Save author failed!',
-                reason
-              });
+              reject(util.getErrorResponse(
+                'Save author failed!',
+                { reason }
+              ));
             })
       })
       .catch(reason => { //Catch Thumbnail rejection
-        reject({
-          message: `Could not save Thumbnail ${detailsToSave.header} because ${reason}`
-        })
+        reject(util.getErrorResponse(
+          `Could not save Thumbnail ${detailsToSave.header}`,
+          reason
+        ))
       });
   });
   return promise;
@@ -116,27 +113,32 @@ module.exports.updateAuthorP = ({ name, username, password, id: authorId, email,
               },
                 (error, populatedAuthor) => {
                   if (error) {
-                    reject({
-                      message: ` Population of ${authorToSave.name} failed. Reason ${error}`
-                    });
+                    reject(util.getErrorResponse(
+                      ` Population of ${authorToSave.name} failed.`,
+                      error
+                    ));
                   } else {
-                    resolve({
-                      message: `${authorToSave.name} updated successfully`,
-                      author: populatedAuthor
-                    });
+                    resolve(util.getInfoResponse(
+                      `${authorToSave.name} updated successfully`,
+                      { author: populatedAuthor }
+                    ));
                   }
                 });
           },
             reason => {
-              reject({
-                message: `Could not update Author ${authorToSave.name} because ${reason}`
-              })
+              reject(util.getErrorResponse(
+                `Could not update Author ${authorToSave.name}`,
+                reason
+              ))
             })
       },
         reason => {
-          reject({
-            message: `Could not update Thumbnail ${thumbnail.header} because ${reason}`
-          })
+          reject(
+            util.getErrorResponse(
+              `Could not update Thumbnail ${thumbnail.header}`,
+              reason
+            )
+          )
         });
   });
   return promise;
@@ -163,10 +165,11 @@ module.exports.deleteAuthorsP = authorIds => {
       .then(aCount => {
         const count = parseInt(aCount);
         if (count > 0) {
-          console.error(`Cannot delete as there are ${count} posts associated with ${authorIds}`);
-          reject({
-            message: `Cannot delete as there are ${count} posts associated with the author(s)`
-          });
+          reject(
+            util.getErrorResponse(
+              `Cannot delete as there are ${count} posts associated with ${authorIds}`,
+            )
+          );
         } else {
           let thumbnailIds = [];
           //Find thumbnail Ids
@@ -180,36 +183,50 @@ module.exports.deleteAuthorsP = authorIds => {
                 .deleteMany(thumbnailIds)
                 .then(deletedData => {
                   Author.deleteMany({ _id: { $in: authorIds } }).then(deletedData => {
-                    resolve({
-                      message: `Authors ${authorIds} deleted successfully`,
-                      deletedCount: deletedData.deletedCount
-                    });
+                    resolve(
+                      util.getInfoResponse(
+                        `Authors ${authorIds} deleted successfully`,
+                        { deletedCount: deletedData.deletedCount }
+                      )
+                    );
                   },
                     //Author error
                     reason => {
-                      reject({
-                        message: `Could not delete authors ${authorIds} because ${reason}`
-                      })
+                      reject(
+                        util.getErrorResponse(
+                          `Could not delete authors ${authorIds}`,
+                          reason
+                        )
+                      )
                     })
                 }).catch(error => {
                   //Thumbnail error
-                  reject({
-                    message: `Could not delete thumbnails ${thumbnailIds} because ${error}`
-                  })
+                  reject(
+                    util.getErrorResponse(
+                      `Could not delete thumbnails ${thumbnailIds}`,
+                      error
+                    )
+                  )
                 })
             })
             .catch(error => {
               //Find authors error
-              reject({
-                message: `Could not find authors ${authorIds} because ${error}`
-              })
+              reject(
+                util.getErrorResponse(
+                  `Could not find authors ${authorIds}`,
+                  error
+                )
+              )
             })
         }
       })
       .catch(error => {
-        reject({
-          message: `Could not find authors ${authorIds} because ${error}`
-        })
+        reject(
+          util.getErrorResponse(
+            `Could not find authors ${authorIds}`,
+            error
+          )
+        )
       })
   });
   return promise;

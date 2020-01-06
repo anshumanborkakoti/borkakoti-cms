@@ -9,9 +9,13 @@ const authorRouter = require("./routes/author.router");
 const postRouter = require("./routes/post.router");
 
 const mongoose = require("mongoose");
+
+//DEV connection string
+// "mongodb+srv://anshuman:LAXeDf9HVVrzhjDG@cluster0-rnjrw.mongodb.net/tljnesandbox?retryWrites=true&w=majority"
 mongoose
   .connect(
-    "mongodb+srv://anshuman:LAXeDf9HVVrzhjDG@cluster0-rnjrw.mongodb.net/tljnesandbox?retryWrites=true&w=majority",
+    //"mongodb+srv://anshuman:LAXeDf9HVVrzhjDG@cluster0-rnjrw.mongodb.net/tljnesandbox?retryWrites=true&w=majority",
+    process.env.DB_CONN_STRING,
     // 'mongodb+srv://anshuman:' +
     // //process.env.MONGO_ATLAS_PASS +
     // 'znTSxedRPfAV38Vi' +
