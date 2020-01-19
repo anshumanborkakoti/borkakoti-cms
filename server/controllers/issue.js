@@ -28,7 +28,6 @@ module.exports.getAllIssues = (req, res, error) => {
       }
     })
     .then(issues => {
-      console.log(`getAllIssues() ${issues}`);
       if (issues) {
         res.status(200).json(
           Utils.getInfoResponse(

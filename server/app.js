@@ -7,19 +7,24 @@ const issueRouter = require("./routes/issue.router");
 const categoryRouter = require("./routes/category.router");
 const authorRouter = require("./routes/author.router");
 const postRouter = require("./routes/post.router");
+const commentsRouter = require("./routes/comments.router");
 
 const mongoose = require("mongoose");
 
-//DEV connection string
-// "mongodb+srv://anshuman:LAXeDf9HVVrzhjDG@cluster0-rnjrw.mongodb.net/tljnesandbox?retryWrites=true&w=majority"
+// Dev
+// mongodb+srv://anshuman:LAXeDf9HVVrzhjDG@cluster0-rnjrw.mongodb.net/tljnesandbox?retryWrites=true&w=majority
+// mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnesandbox?retryWrites=true&w=majority
+
+// Staging
+// mongodb+srv://tljneReader:XpASyYfUFx10PfMN@tljne-cluster-rcd2n.mongodb.net/tljnestaging?retryWrites=true&w=majority
+
+
+// Read - only prod
+// mongodb+srv://tljneReader:XpASyYfUFx10PfMN@tljne-cluster-rcd2n.mongodb.net/tljne?retryWrites=true&w=majority
 mongoose
   .connect(
-    //"mongodb+srv://anshuman:LAXeDf9HVVrzhjDG@cluster0-rnjrw.mongodb.net/tljnesandbox?retryWrites=true&w=majority",
+    // "mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnesandbox?retryWrites=true&w=majority",
     process.env.DB_CONN_STRING,
-    // 'mongodb+srv://anshuman:' +
-    // //process.env.MONGO_ATLAS_PASS +
-    // 'znTSxedRPfAV38Vi' +
-    // '@cluster0-rnjrw.mongodb.net/tljnesandbox',
     {
       useNewUrlParser: true,
       useFindAndModify: false,
@@ -38,15 +43,29 @@ mongoose
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));
+const allowedOrgins = [
+  'https://the-little-journal.com',
+  'https://wwww.the-little-journal.com',
+  'http://localhost:4200',
+  'http://localhost:4201',
+  'http://tljne-staging.s3-website.ap-south-1.amazonaws.com'
+
+];
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  const reqOrigin = req.headers['origin'];
+  const originIndex = allowedOrgins.findIndex(aOrigin => aOrigin === reqOrigin);
+  if (originIndex > -1) {
+    res.setHeader("Access-Control-Allow-Origin", reqOrigin);
+    res.setHeader("Vary", 'Origin');
+  }
+
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET,POST,PUT, DELETE,PATCH,OPTIONS"
+    "GET,POST,PUT,DELETE,PATCH,OPTIONS"
   );
   next();
 });
@@ -56,4 +75,6 @@ app.use("/tljneapi/issues", issueRouter);
 app.use("/tljneapi/categories", categoryRouter);
 app.use("/tljneapi/authors", authorRouter);
 app.use("/tljneapi/posts", postRouter);
+app.use("/tljneapi/comments", commentsRouter);
+
 module.exports = app;

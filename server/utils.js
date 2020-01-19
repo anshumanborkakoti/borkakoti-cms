@@ -1,4 +1,4 @@
-module.exports.isProd = () => true//process.env.mode === 'production';
+module.exports.isProd = () => process.env.mode === 'production';
 
 module.exports.makeid = length => {
   let result = '';
@@ -67,4 +67,11 @@ module.exports.memoize = function (func) {
     return result;
   }
 
+}
+
+module.exports.ApiResponse = class {
+  constructor (aStatusCode = null, aResponse = null) {
+    this.statusCode = aStatusCode;
+    this.response = aResponse;
+  }
 }

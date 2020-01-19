@@ -13,7 +13,6 @@ module.exports.getAllCategories = (req, res, error) => {
       }
     })
     .then(aCategories => {
-      console.log(`getAllCategories() ${aCategories}`);
       if (aCategories) {
         res.status(200).json(
           Utils.getInfoResponse(
