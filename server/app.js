@@ -11,6 +11,7 @@ const commentsRouter = require("./routes/comments.router");
 
 const mongoose = require("mongoose");
 
+
 // Dev
 // mongodb+srv://anshuman:LAXeDf9HVVrzhjDG@cluster0-rnjrw.mongodb.net/tljnesandbox?retryWrites=true&w=majority
 // mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnesandbox?retryWrites=true&w=majority
@@ -23,12 +24,13 @@ const mongoose = require("mongoose");
 // mongodb+srv://tljneReader:XpASyYfUFx10PfMN@tljne-cluster-rcd2n.mongodb.net/tljne?retryWrites=true&w=majority
 mongoose
   .connect(
-    // "mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnesandbox?retryWrites=true&w=majority",
+    //"mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnesandbox?retryWrites=true&w=majority",
     process.env.DB_CONN_STRING,
     {
       useNewUrlParser: true,
       useFindAndModify: false,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useCreateIndex: true
     }
   )
   .then(() => {
@@ -38,7 +40,7 @@ mongoose
     console.log(`Database connection error ${e}`);
   });
 
-//DB username: anshuman PAssword: znTSxedRPfAV38Vi
+
 
 app.use(bodyParser.json());
 

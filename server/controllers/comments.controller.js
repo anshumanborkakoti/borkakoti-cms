@@ -1,4 +1,4 @@
-const Comment = require('../models/comments.schema');
+const Comment = require('../models/transactional.model.factory').CommentsModel;
 const Utils = require('../utils');
 
 //NoAuth
@@ -74,7 +74,8 @@ const getCommentsP = async ({ postId = null, approved = null }) => {
   }
   let result = new Utils.ApiResponse();
   try {
-    let comments = await Comment.find(filter).sort({ timestamp: 'desc' });
+    let commentModel = await Comment;
+    let comments = await commentModel.find(filter).sort({ timestamp: 'desc' });
     result.response = Utils.getInfoResponse(
       `[getCommentsP()] ${comments.length} comments fetched for post id ${postId}`,
       { comments }
@@ -97,7 +98,8 @@ module.exports.saveComment = async (req, res, error) => {
 
   const saveResult = new Utils.ApiResponse();
   try {
-    const result = await Comment.create({
+    let commentModel = await Comment;
+    const result = await commentModel.create({
       postId,
       author,
       comment,
@@ -133,7 +135,8 @@ module.exports.approveComments = async (req, res, error) => {
   }
   const result = new Utils.ApiResponse();
   try {
-    const { matchedCount, modifiedCount, upsertedCount } = await Comment.bulkWrite(bulkWriteOpts);
+    let comcommentModelment = await Comment;
+    const { matchedCount, modifiedCount, upsertedCount } = await commentModel.bulkWrite(bulkWriteOpts);
     result.statusCode = 200;
     result.response = Utils.getInfoResponse(
       `[updateApproved()] Comments with ids ${commentIds} approved successfully. Matched count: ${matchedCount}, Modified count ${modifiedCount}
@@ -153,7 +156,8 @@ module.exports.approveComments = async (req, res, error) => {
 const deleteCommentsP = async commentIds => {
   let result = new Utils.ApiResponse();
   try {
-    const { ok, deletedCount } = await Comment.deleteMany({ id: { $in: commentIds } });
+    let commentModel = await Comment;
+    const { ok, deletedCount } = await commentModel.deleteMany({ id: { $in: commentIds } });
     if (parseInt(ok) === 1) {
       result = Utils.getInfoResponse(
         `[deleteCommentsP()] ${deleteIds} deleted. Deleted count ${deletedCount}`,

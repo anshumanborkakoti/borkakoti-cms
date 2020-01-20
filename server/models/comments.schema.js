@@ -1,9 +1,8 @@
-const mongoose = require('mongoose');
+const Schema = require('mongoose/lib/schema');
 const uniqueValidator = require('mongoose-unique-validator');
-
-const commentsSchema = mongoose.Schema({
+const commentsSchema = new Schema({
   postId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     required: true,
     ref: 'Post'
   },
@@ -24,5 +23,7 @@ const commentsSchema = mongoose.Schema({
     required: true
   }
 });
-mongoose.plugin(uniqueValidator);
-module.exports = mongoose.model('Comments', commentsSchema);
+
+commentsSchema.plugin(uniqueValidator);
+
+module.exports = commentsSchema;
