@@ -30,7 +30,7 @@ export class Comment implements CmsClass<Comment> {
 
 export const createComment = ({ id, _id, postId, author, comment, approved, timestamp }): Comment => {
   return new Comment(
-    id || id || null,
+    _id || id || null,
     postId,
     author,
     comment,

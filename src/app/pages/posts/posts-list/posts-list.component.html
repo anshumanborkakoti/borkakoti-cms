@@ -100,7 +100,7 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
-<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons *ngIf="!isLoading"></mat-paginator>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 
 <div class="no-post-message" *ngIf="dataSource.data.length === 0 && !isLoading">
   No Posts to display!

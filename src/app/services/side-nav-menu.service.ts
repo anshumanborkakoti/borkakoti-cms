@@ -35,6 +35,12 @@ export class SideNavMenuService {
       icon: 'notes',
       authRoles: ['Chief editor', 'admin', 'editor']
     },
+    {
+      label: 'Comments',
+      routerLink: 'comments',
+      icon: 'comment',
+      authRoles: ['Chief editor', 'admin']
+    },
   ];
   constructor() { }
 

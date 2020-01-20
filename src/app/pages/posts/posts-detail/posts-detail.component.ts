@@ -17,6 +17,7 @@ import { User } from 'src/app/models/user.model';
 import { Subscription } from 'rxjs';
 import { DETAIL_MODES } from 'src/app/common/util/constants';
 import { UsersService } from '../../users/users.service';
+import { Data } from '@angular/router';
 
 @Component({
   selector: 'app-posts-detail',
@@ -55,6 +56,7 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
   isLoading = false;
   private loadingSubscription = new Subscription();
   private isSavedSubscription = new Subscription();
+  private singlePostSubscription = new Subscription();
 
   ngOnDestroy(): void {
     this.categorySubscription.unsubscribe();
@@ -63,6 +65,7 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
     this.loadingSubscription.unsubscribe();
     this.isSavedSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
+    this.singlePostSubscription.unsubscribe();
   }
 
 
@@ -117,8 +120,6 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const postid = this.activatedRoute.snapshot.params.postid;
-    this.mode = this.activatedRoute.snapshot.queryParamMap.get('mode');
     this.loadingSubscription = this.postService.getIsLoading()
       .subscribe(aIsLoading => this.isLoading = !!aIsLoading);
     this.isSavedSubscription = this.postService.getIsSaved()
@@ -128,18 +129,14 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
           this.snackBar.open('Saved successfully', 'Saved', { duration: 5000 });
         }
       });
-    if (this.mode === DETAIL_MODES.create) {
-      this.post = new Post();
-      this.post.category = new Category();
-      this.post.issues = [];
-      this.post.authors = [];
-    } else if (this.mode === DETAIL_MODES.update) {
-      this.post = this.postService.getPost(postid);
-      if (!this.post) {
-        this.router.navigate(['posts']);
-      }
-      this.post = this.post.clone();
-    }
+    this.singlePostSubscription = this.activatedRoute.data
+      .subscribe((aData: Data) => {
+        const aPost = aData.post;
+        if (!aPost) {
+          this.router.navigate(['posts']);
+        }
+        this.post = aPost.clone();
+      });
 
     this.initCategories();
     this.initEditTable();

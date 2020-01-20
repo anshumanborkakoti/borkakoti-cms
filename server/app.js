@@ -8,6 +8,7 @@ const categoryRouter = require("./routes/category.router");
 const authorRouter = require("./routes/author.router");
 const postRouter = require("./routes/post.router");
 const commentsRouter = require("./routes/comments.router");
+const utils = require('./utils');
 
 const mongoose = require("mongoose");
 
@@ -24,7 +25,7 @@ const mongoose = require("mongoose");
 // mongodb+srv://tljneReader:XpASyYfUFx10PfMN@tljne-cluster-rcd2n.mongodb.net/tljne?retryWrites=true&w=majority
 mongoose
   .connect(
-    //"mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnesandbox?retryWrites=true&w=majority",
+    // "mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnesandbox?retryWrites=true&w=majority",
     process.env.DB_CONN_STRING,
     {
       useNewUrlParser: true,
@@ -34,10 +35,10 @@ mongoose
     }
   )
   .then(() => {
-    console.log("Connected to database");
+    utils.logInfo("[APP] Connected to database");
   })
   .catch(e => {
-    console.log(`Database connection error ${e}`);
+    utils.logError(`[APP] Database connection error`, e);
   });
 
 

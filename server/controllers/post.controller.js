@@ -165,7 +165,6 @@ function makeFilter(query) {
 }
 
 module.exports.getPosts = (req, res, error) => {
-
   this.getPostsP(makeFilter(req.query))
     .then(posts => {
       res.status(200).json(

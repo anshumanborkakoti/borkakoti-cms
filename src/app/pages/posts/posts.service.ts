@@ -60,8 +60,43 @@ export class PostService {
       });
   }
 
-  getPost(id: string): Post {
-    return this.allPosts.find(aPost => aPost.id === id);
+  getPost(id: string): Subject<Post> {
+    const postSub = new Subject<Post>();
+    let post = null;
+    if (this.allPosts && this.allPosts.length > 0) {
+      post = this.allPosts.find(aPost => aPost.id === id);
+    }
+    if (post) {
+      return new BehaviorSubject<Post>(post);
+    } else {
+      // Otherwise reach out over http
+      this.isLoading.next(true);
+      this.http.get<{ code: string, message?: string, posts: any[] }>
+        (this.API_URL, {
+          params: {
+            postid: id
+          }
+        })
+        .pipe(
+          map(aPost => {
+            if (aPost && Array.isArray(aPost.posts) && aPost.posts.length > 0) {
+              return createPost(aPost.posts[0]);
+            }
+            return null;
+          })
+        )
+        .subscribe(
+          aPost => {
+            postSub.next(aPost);
+            this.isLoading.next(false);
+          },
+          error => {
+            console.error(`[PostService.getPost] Error occurred ${error.message} Code ${error.code}`);
+            this.isLoading.next(false);
+          }
+        )
+    }
+    return postSub;
   }
 
   private mapSavedPost = (savedData: { message: string, post: any }) => {

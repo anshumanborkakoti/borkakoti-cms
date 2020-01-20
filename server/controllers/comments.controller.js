@@ -6,7 +6,7 @@ module.exports.getApprovedCommentsByPost = async (req, res, error) => {
   const postId = req.params.postId;
   if (!postId) {
     res.status(500).json(Utils.getErrorResponse(
-      `[getCommentsP()] No post Id given`,
+      `[getApprovedCommentsByPost()] No post Id given`,
       'No Post id'
     ));
     return;
@@ -33,6 +33,24 @@ module.exports.getAllComments = async (req, res, error) => {
 module.exports.getAllUnapprovedComments = async (req, res, error) => {
   try {
     let { statusCode, response } = await getCommentsP({ approved: false });
+    res.status(statusCode).json(response)
+  } catch (e) {
+    res.status(500).json(e);
+  }
+}
+
+//Auth
+module.exports.getUnapprovedCommentsByPost = async (req, res, error) => {
+  const postId = req.params.postId;
+  if (!postId) {
+    res.status(500).json(Utils.getErrorResponse(
+      `[getUnapprovedCommentsByPost()] No post Id given`,
+      'No Post id'
+    ));
+    return;
+  }
+  try {
+    let { statusCode, response } = await getCommentsP({ approved: false, postId });
     res.status(statusCode).json(response)
   } catch (e) {
     res.status(500).json(e);
@@ -77,7 +95,7 @@ const getCommentsP = async ({ postId = null, approved = null }) => {
     let commentModel = await Comment;
     let comments = await commentModel.find(filter).sort({ timestamp: 'desc' });
     result.response = Utils.getInfoResponse(
-      `[getCommentsP()] ${comments.length} comments fetched for post id ${postId}`,
+      `[getCommentsP()] ${comments.length} comments fetched for filter ${JSON.stringify(filter)}`,
       { comments }
     )
     result.statusCode = 200;
@@ -135,7 +153,7 @@ module.exports.approveComments = async (req, res, error) => {
   }
   const result = new Utils.ApiResponse();
   try {
-    let comcommentModelment = await Comment;
+    let commentModel = await Comment;
     const { matchedCount, modifiedCount, upsertedCount } = await commentModel.bulkWrite(bulkWriteOpts);
     result.statusCode = 200;
     result.response = Utils.getInfoResponse(
@@ -157,10 +175,10 @@ const deleteCommentsP = async commentIds => {
   let result = new Utils.ApiResponse();
   try {
     let commentModel = await Comment;
-    const { ok, deletedCount } = await commentModel.deleteMany({ id: { $in: commentIds } });
+    const { ok, deletedCount } = await commentModel.deleteMany({ _id: { $in: commentIds } });
     if (parseInt(ok) === 1) {
       result = Utils.getInfoResponse(
-        `[deleteCommentsP()] ${deleteIds} deleted. Deleted count ${deletedCount}`,
+        `[deleteCommentsP()] ${commentIds} deleted. Deleted count ${deletedCount}`,
         null
       );
       result.statusCode = 200;

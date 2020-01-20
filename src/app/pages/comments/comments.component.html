@@ -1,0 +1,35 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion *ngFor="let post of posts" class="accordion" multi="false">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Comments for {{ post.label }} by {{ getAuthorNames(post)}}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-card class="comments-card" *ngFor="let comment of getCommentsForPost(post.id)">
+      <mat-card-header>
+        <mat-card-title>
+          <!-- <mat-checkbox class="selection-checkbox"></mat-checkbox> -->
+          {{ comment.author }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          {{ comment.comment }}
+        </p>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-raised-button color="primary" (click)="approveComment(comment.id)"
+          *ngIf="!comment.approved">APPROVE</button>
+        <ng-container *ngIf="comment.approved">
+          <mat-icon aria-hidden="false" aria-label="approved icon">done_outline</mat-icon>
+          Approved!
+        </ng-container>
+        <button mat-raised-button color="warn" (click)="deleteComment(comment.id)">DELETE</button>
+      </mat-card-actions>
+    </mat-card>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<p *ngIf="!comments || comments.length === 0" class="nocomment">No comments!</p>
