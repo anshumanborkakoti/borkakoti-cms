@@ -120,6 +120,7 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.mode = this.activatedRoute.snapshot.queryParamMap.get('mode');
     this.loadingSubscription = this.postService.getIsLoading()
       .subscribe(aIsLoading => this.isLoading = !!aIsLoading);
     this.isSavedSubscription = this.postService.getIsSaved()

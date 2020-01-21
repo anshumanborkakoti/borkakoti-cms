@@ -11,21 +11,8 @@ const commentsRouter = require("./routes/comments.router");
 const utils = require('./utils');
 
 const mongoose = require("mongoose");
-
-
-// Dev
-// mongodb+srv://anshuman:LAXeDf9HVVrzhjDG@cluster0-rnjrw.mongodb.net/tljnesandbox?retryWrites=true&w=majority
-// mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnesandbox?retryWrites=true&w=majority
-
-// Staging
-// mongodb+srv://tljneReader:XpASyYfUFx10PfMN@tljne-cluster-rcd2n.mongodb.net/tljnestaging?retryWrites=true&w=majority
-
-
-// Read - only prod
-// mongodb+srv://tljneReader:XpASyYfUFx10PfMN@tljne-cluster-rcd2n.mongodb.net/tljne?retryWrites=true&w=majority
 mongoose
   .connect(
-    // "mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnesandbox?retryWrites=true&w=majority",
     process.env.DB_CONN_STRING,
     {
       useNewUrlParser: true,

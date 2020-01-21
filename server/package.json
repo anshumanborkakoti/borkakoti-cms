@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "start-server": "nodemon -r dotenv/config server.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -13,7 +14,10 @@
     "express": "^4.17.1",
     "hammerjs": "^2.0.8",
     "mongoose": "^5.7.5",
-    "mongoose-unique-validator": "^2.0.3"
+    "mongoose-unique-validator": "^2.0.3",
+    "bcrypt": "3.0.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.5.1"
   },
   "author": "Anshuman Borkakoti",
   "license": "ISC"

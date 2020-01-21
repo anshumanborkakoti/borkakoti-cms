@@ -11,6 +11,7 @@ import { Cloudinary } from 'cloudinary-core';
 import { environment } from 'src/environments/environment';
 import { ErrorComponent } from './error/error.component';
 import { ErrorInterceptor } from './error/error.interceptor';
+import { AuthenticationInterceptor } from './auth/auth.interceptor';
 
 export const cloudinaryLib = {
   Cloudinary: Cloudinary
@@ -35,6 +36,11 @@ export const cloudinaryLib = {
     ErrorComponent
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,

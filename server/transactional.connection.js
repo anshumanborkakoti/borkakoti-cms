@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 const utils = require('./utils');
 
-/**
- * dev conn  "mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnetransactionaldev?retryWrites=true&w=majority"
- * prod conn  "mongodb+srv://tljneapiWrite:ecwdYReVNQcLEfCY@tljne-cluster-rcd2n.mongodb.net/tljnetransactionalprod?retryWrites=true&w=majority"
- */
-
 const transactional = async () => {
   let conn = null;
   try {
