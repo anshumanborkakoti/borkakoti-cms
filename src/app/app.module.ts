@@ -12,13 +12,14 @@ import { environment } from 'src/environments/environment';
 import { ErrorComponent } from './error/error.component';
 import { ErrorInterceptor } from './error/error.interceptor';
 import { AuthenticationInterceptor } from './auth/auth.interceptor';
+import { UnauthorizedComponent } from './auth/authorisation/unauthorized.component';
 
 export const cloudinaryLib = {
   Cloudinary: Cloudinary
 };
 
 @NgModule({
-  declarations: [AppComponent, ErrorComponent],
+  declarations: [AppComponent, ErrorComponent, UnauthorizedComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -33,7 +34,8 @@ export const cloudinaryLib = {
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    ErrorComponent
+    ErrorComponent,
+    UnauthorizedComponent
   ],
   providers: [
     {

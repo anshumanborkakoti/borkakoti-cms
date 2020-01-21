@@ -1,5 +1,6 @@
 import { CmsClass } from 'src/app/models/general-class.interface';
 import { FormGroup } from '@angular/forms';
+import { ROLES, LANDING } from './constants';
 
 export function cloneCmsClassArray<T extends CmsClass<T>>(cArray: T[]): T[] {
   if (!cArray) {
@@ -35,4 +36,14 @@ export function makeid(length: number) {
 export function showErrorIf(controlName: string, errorName: string, form: FormGroup) {
   const errors = form.get(controlName).errors;
   return !form.get(controlName).valid && errors && errors[errorName] && form.touched;
+}
+
+export function getLandingPageByRole(aRoles: string[]) {
+  if (aRoles.findIndex(aRole => aRole === ROLES.ADMIN) > -1) {
+    return LANDING[ROLES.ADMIN];
+  } else if (aRoles.findIndex(aRole => aRole === ROLES.CHIEF_EDITOR) > -1) {
+    return LANDING[ROLES.CHIEF_EDITOR];
+  } else if (aRoles.findIndex(aRole => aRole === ROLES.EDITOR) > -1) {
+    return LANDING[ROLES.EDITOR];
+  }
 }

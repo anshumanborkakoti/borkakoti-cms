@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { DETAIL_MODES } from 'src/app/common/util/constants';
 import { UsersService } from '../../users/users.service';
 import { Data } from '@angular/router';
+import { AuthenticationService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-posts-detail',
@@ -45,8 +46,6 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
   /** Authors */
   allAuthors: Author[];
 
-  /** Users */
-  allUsers: User[];
 
   private categorySubscription = new Subscription();
   private authorSubscription = new Subscription();
@@ -77,7 +76,8 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
     private issueService: IssuesService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private userService: UsersService
+    private userService: UsersService,
+    private authService: AuthenticationService
   ) { }
 
   private initCategories() {
@@ -91,13 +91,11 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
   }
 
   private initUsers() {
+    const loggedInUser = this.authService.getLoggedInUser();
     this.userSubscription = this.userService.getUsersObservable()
       .subscribe(aUsers => {
-        this.allUsers = [...aUsers];
-        if (this.allUsers.length > 0) {
-          // TODO remove
-          this.post.assignedTo = this.allUsers[0];
-        }
+        const allUsers = [...aUsers];
+        this.post.assignedTo = allUsers.find(aUser => aUser.username === loggedInUser.username);
       });
     this.userService.getUsers();
   }

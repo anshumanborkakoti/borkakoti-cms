@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthData } from './auth.model';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { User } from '../models/user.model';
+import { getLandingPageByRole } from '../common/util/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,8 @@ export class AuthenticationService {
 
   private loggedInUserId = new Subject<string>();
 
+  private loggedInUser: User = null;
+
   private readonly API_URL = `${environment.api_url}/users`;
 
   logout() {
@@ -38,6 +42,10 @@ export class AuthenticationService {
     return this.loggedInUserId;
   }
 
+  getLoggedInUser(): User {
+    return this.loggedInUser;
+  }
+
   isAuthenticated() {
     return this.isAuth;
   }
@@ -51,26 +59,28 @@ export class AuthenticationService {
   }
 
   login(email: string, password: string) {
-    const authData: AuthData = {
-      email,
-      password
-    };
     return this.http
-      .post<{ token: string; expiresIn: number; username: string }>(
+      .post<{ token: string; expiresIn: number; username: string, roles: string[] }>(
         `${this.API_URL}/login`,
-        authData
+        null,
+        {
+          headers: {
+            ['Authorization']: `Basic ${btoa(`${email}:${password}`)}`
+          }
+        }
       )
       .subscribe(
         res => {
           this.token = res.token;
           if (this.token) {
             this.isAuth = true;
+            this.loggedInUser = new User('', res.username, '', '', '', '', res.roles);
             this.loggedInUserId.next(res.username);
             this.tokenExpiresIn = res.expiresIn * 1000; // In ms
             this.saveTokenInfo();
             this.addTimerForTokenExpiry();
             this.isUserAuthenticated.next(true);
-            this.router.navigate(['/users']);
+            this.router.navigate([getLandingPageByRole(this.loggedInUser.roles)]);
           } else {
             this.isUserAuthenticated.next(false);
             this.isAuth = false;

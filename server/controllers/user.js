@@ -6,12 +6,14 @@ const jwt = require("jsonwebtoken");
 module.exports.login = async (req, res, next) => {
   let loggedInUser;
   try {
-    let user = await User.findOne({ email: req.body.email });
+    const [, encoded] = req.headers.authorization.split(" ");
+    const [email, password] = Buffer.from(encoded, 'base64').toString().split(":");
+    let user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json(Utils.getErrorResponse("[user.login()] Auth failed", "No user found"));
     }
     loggedInUser = user;
-    let passwordComparison = await bcrypt.compare(req.body.password, user.password);
+    let passwordComparison = await bcrypt.compare(password, user.password);
     if (!passwordComparison) {
       return res.status(401).json(Utils.getErrorResponse("[user.login()] Auth failed", "Password invalid"));
     }
@@ -28,7 +30,7 @@ module.exports.login = async (req, res, next) => {
         "[user.login()] User found",
         {
           token: token,
-          expiresIn: 3600,
+          expiresIn: 1800,
           username: loggedInUser.username,
           roles: loggedInUser.roles
         }
@@ -114,40 +116,52 @@ module.exports.saveUser = (req, res, next) => {
 
 module.exports.updateUserP = ({ id }, { name, username, password, email, address, roles }) => {
   const promise = new Promise((resolve, reject) => {
-    const toUpdate = new User({
-      name,
-      _id: id,
-      username,
-      password,
-      email,
-      address,
-      roles
-    });
-    User.updateOne({ _id: toUpdate._id }, toUpdate)
-      .then(result => {
-        if (result.n > 0) {
-          resolve(
-            Utils.getInfoResponse(
-              `User with id ${id} was saved successfully`,
-              { user: toUpdate }
-            )
-          );
-        } else {
-          reject(
-            Utils.getErrorResponse(
-              `Unauthorized to update`,
-              '401'
-            )
-          );
-        }
-      }).catch(error => {
+    bcrypt.hash(password, 10)
+      .then(hash => {
+        const toUpdate = new User({
+          name,
+          _id: id,
+          username,
+          password: hash,
+          email,
+          address,
+          roles
+        });
+        User.updateOne({ _id: toUpdate._id }, toUpdate)
+          .then(result => {
+            if (result.n > 0) {
+              resolve(
+                Utils.getInfoResponse(
+                  `User with id ${id} was saved successfully`,
+                  { user: toUpdate }
+                )
+              );
+            } else {
+              reject(
+                Utils.getErrorResponse(
+                  `Unauthorized to update`,
+                  '401'
+                )
+              );
+            }
+          }).catch(error => {
+            reject(
+              Utils.getErrorResponse(
+                `User could not be updated`,
+                error
+              )
+            );
+          })
+      })
+      .catch(error => {
         reject(
           Utils.getErrorResponse(
-            `User could not be updated`,
+            `Save user failed!`,
             error
           )
         );
-      })
+      });
+
   });
 
   return promise;

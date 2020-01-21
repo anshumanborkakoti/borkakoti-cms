@@ -23,7 +23,7 @@
     </span>
     <div class="mat-form-field-wrapper" *ngIf="this.post.assignedTo">
       <mat-label>Assigned to</mat-label>
-      {{ post.assignedTo.name }}
+      {{ post.assignedTo.username }}
     </div>
 
     <div class="mat-form-field-wrapper" [ngClass]="{'published': post.published, 'not-published' : !post.published}">

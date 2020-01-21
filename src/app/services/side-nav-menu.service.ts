@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ROLES } from '../common/util/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -9,44 +10,49 @@ export class SideNavMenuService {
       label: 'Users',
       routerLink: 'users',
       icon: 'person',
-      authRoles: ['admin']
+      authRoles: [ROLES.ADMIN]
     },
     {
       label: 'Issues',
       routerLink: 'issues',
       icon: 'book',
-      authRoles: ['Chief editor', 'admin']
+      authRoles: [ROLES.CHIEF_EDITOR, ROLES.ADMIN]
     },
     {
       label: 'Categories',
       routerLink: 'categories',
       icon: 'label',
-      authRoles: ['Chief editor', 'admin']
+      authRoles: [ROLES.CHIEF_EDITOR, ROLES.ADMIN]
     },
     {
       label: 'Authors',
       routerLink: 'authors',
       icon: 'people',
-      authRoles: ['Chief editor', 'admin', 'editor']
+      authRoles: [ROLES.CHIEF_EDITOR, ROLES.ADMIN, ROLES.EDITOR]
     },
     {
       label: 'Posts',
       routerLink: 'posts',
       icon: 'notes',
-      authRoles: ['Chief editor', 'admin', 'editor']
+      authRoles: [ROLES.CHIEF_EDITOR, ROLES.ADMIN, ROLES.EDITOR]
     },
     {
       label: 'Comments',
       routerLink: 'comments',
       icon: 'comment',
-      authRoles: ['Chief editor', 'admin']
+      authRoles: [ROLES.CHIEF_EDITOR, ROLES.ADMIN]
     },
   ];
   constructor() { }
 
-  getMenuItemsForRole(role: string) {
+  isRoleAuthorizedForPath(aRoles, aPath) {
+    const path = this.menuItems.find(aMenuItem => aMenuItem.routerLink === aPath);
+    return path.authRoles.some(aAuthRole => aRoles.some(aUserRole => aAuthRole === aUserRole));
+  }
+
+  getMenuItemsForRole(userRoles: string[]) {
     return this.menuItems.filter(item => {
-      return item.authRoles.find(r => r === role);
+      return userRoles.some(aUserRole => item.authRoles.some(aAuthRole => aAuthRole === aUserRole));
     });
   }
 }

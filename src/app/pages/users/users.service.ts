@@ -4,11 +4,12 @@ import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { ROLES } from 'src/app/common/util/constants';
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {
 
-  private roles: string[] = ['Chief editor', 'admin', 'editor'];
+  private roles: string[] = [ROLES.CHIEF_EDITOR, ROLES.ADMIN, ROLES.EDITOR];
 
   private users: User[] = [];
   private usersSubject: Subject<User[]> = new Subject();
