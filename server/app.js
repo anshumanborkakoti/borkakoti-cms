@@ -38,7 +38,8 @@ const allowedOrgins = [
   'https://wwww.the-little-journal.com',
   'http://localhost:4200',
   'http://localhost:4201',
-  'http://tljne-staging.s3-website.ap-south-1.amazonaws.com'
+  'http://tljne-staging.s3-website.ap-south-1.amazonaws.com',
+  'https://cms.the-little-journal.com'
 
 ];
 app.use((req, res, next) => {
