@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const allowedOrgins = [
   'https://the-little-journal.com',
-  'https://wwww.the-little-journal.com',
+  'https://www.the-little-journal.com',
   'http://localhost:4200',
   'http://localhost:4201',
   'http://tljne-staging.s3-website.ap-south-1.amazonaws.com',
