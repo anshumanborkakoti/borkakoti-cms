@@ -39,8 +39,8 @@ const allowedOrgins = [
   'http://localhost:4200',
   'http://localhost:4201',
   'http://tljne-staging.s3-website.ap-south-1.amazonaws.com',
-  'https://cms.the-little-journal.com'
-
+  'https://cms.the-little-journal.com',
+  'http://tljne-cms.s3-website.ap-south-1.amazonaws.com'
 ];
 app.use((req, res, next) => {
   const reqOrigin = req.headers['origin'];

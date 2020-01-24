@@ -15,7 +15,10 @@ const routes: Routes = [
   },
   {
     path: 'detail',
-    component: PostsDetailComponent
+    component: PostsDetailComponent,
+    resolve: {
+      post: PostResolver
+    }
   },
   {
     path: 'detail/:postid',
