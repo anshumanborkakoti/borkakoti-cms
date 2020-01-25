@@ -23,7 +23,7 @@ module.exports.login = async (req, res, next) => {
         id: loggedInUser._id
       },
       process.env.JWT_PASS,
-      { expiresIn: "30m" }
+      { expiresIn: "2h" }
     );
     res.status(200).json(
       Utils.getInfoResponse(

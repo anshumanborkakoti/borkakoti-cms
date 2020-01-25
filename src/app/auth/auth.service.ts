@@ -76,6 +76,7 @@ export class AuthenticationService {
             this.isAuth = true;
             this.loggedInUser = new User('', res.username, '', '', '', '', res.roles);
             this.loggedInUserId.next(res.username);
+            this.saveUserInfo(this.loggedInUser);
             this.tokenExpiresIn = res.expiresIn * 1000; // In ms
             this.saveTokenInfo();
             this.addTimerForTokenExpiry();
@@ -102,6 +103,8 @@ export class AuthenticationService {
       this.logout();
       return;
     }
+    this.loggedInUser = JSON.parse(localStorage.getItem('borkcms-user'));
+    this.loggedInUserId.next(this.loggedInUser.username);
     this.token = token;
     this.tokenExpiresIn = expiryTimeLeft;
     this.saveTokenInfo();
@@ -122,6 +125,11 @@ export class AuthenticationService {
     const tokenExpiresInFuture = new Date(now.getTime() + this.tokenExpiresIn);
     localStorage.setItem('borkcms-expiresIn', tokenExpiresInFuture.toISOString());
   }
+
+  saveUserInfo(aUser: User) {
+    localStorage.setItem('borkcms-user', JSON.stringify(aUser));
+  }
+
 
   deleteTokenInfo() {
     localStorage.removeItem('borkcms-token');

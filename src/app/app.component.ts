@@ -28,11 +28,11 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sideOpened = this.isAuthenticated = this.authService.isAuthenticated();
     this.authSubs = this.authService.getIsUserAuthenticated().subscribe(aIsAuth => this.sideOpened = this.isAuthenticated = !!aIsAuth);
-    this.authService.autoRestoreAuthSession();
     this.userSubs = this.authService.getLoggedInUserId().subscribe(auserid => {
       this.loggedInUser = auserid;
       this.menuItems = this.sidenavService.getMenuItemsForRole(this.authService.getLoggedInUser().roles);
     });
+    this.authService.autoRestoreAuthSession();
   }
 
   ngOnDestroy(): void {

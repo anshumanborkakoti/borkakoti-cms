@@ -1,4 +1,4 @@
-module.exports.isProd = () => process.env.mode === 'production';
+module.exports.isProd = () => process.env.NODE_ENV === 'production';
 
 module.exports.makeid = length => {
   let result = '';

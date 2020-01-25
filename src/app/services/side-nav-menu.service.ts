@@ -45,8 +45,8 @@ export class SideNavMenuService {
   ];
   constructor() { }
 
-  isRoleAuthorizedForPath(aRoles, aPath) {
-    const path = this.menuItems.find(aMenuItem => aMenuItem.routerLink === aPath);
+  isRoleAuthorizedForPath(aRoles: string[], aPath: string) {
+    const path = this.menuItems.find(aMenuItem => aPath.startsWith(aMenuItem.routerLink));
     return path.authRoles.some(aAuthRole => aRoles.some(aUserRole => aAuthRole === aUserRole));
   }
 

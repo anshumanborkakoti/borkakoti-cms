@@ -155,8 +155,11 @@ function makeFilter(query) {
   if (categoryid) {
     filter.category = categoryid
   }
-  if (issueids && Array.isArray(issueids) && issueids.length > 0) {
-    filter.issues = { $in: issueids }
+  if (issueids) {
+    const issues = issueids.split(',');
+    if (Array.isArray(issues) && issues.length > 0) {
+      filter.issues = { $in: issues }
+    }
   }
   if (approved) {
     filter.approved = (approved === 'true');
