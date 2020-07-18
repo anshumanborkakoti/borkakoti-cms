@@ -20,6 +20,9 @@
     "bcryptjs": "^2.4.3",
     "bcrypt": "3.0.0"
   },
+  "engines": {
+    "node": "8.x"
+  },
   "author": "Anshuman Borkakoti",
   "license": "ISC"
 }
