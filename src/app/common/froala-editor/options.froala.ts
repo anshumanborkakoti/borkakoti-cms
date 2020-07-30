@@ -73,5 +73,6 @@ export const FROALA_EDITOR_OPTIONS: any = {
     indent_char: ' ',
     indent_size: 4,
     wrap_line_length: 0,
-  }
+  },
+  attribution: false
 };

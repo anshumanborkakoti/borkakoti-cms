@@ -75,11 +75,17 @@ export class ThumbnailComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.thumbnailForm.valid) {
       this.thumbnail.header = this.thumbnailForm.value.header;
       this.thumbnail.image.publicId = this.thumbnailForm.value.image;
-      this.thumbnail.content = this.thumbnailForm.value.content;
+      this.thumbnail.content = this.sanitizeFroala(this.thumbnailForm.value.content);
       this.thumbnail.caption = this.thumbnailForm.value.caption;
       this.thumbnail.footer = this.thumbnailForm.value.footer;
       this.thumbnailSaved.emit(this.thumbnail.clone());
     }
+  }
+
+  sanitizeFroala(aContent: string) {
+    return aContent.replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px;'
+      + ' opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1"' +
+      ' title="Froala Editor">Froala Editor</a></p>', '');
   }
 
   get dialogTitle() {
