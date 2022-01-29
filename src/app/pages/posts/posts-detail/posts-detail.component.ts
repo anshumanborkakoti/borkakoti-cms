@@ -147,7 +147,7 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
 
   private initForm() {
     this.postForm = new FormGroup({
-      label: new FormControl(this.post.label, [Validators.required, Validators.maxLength(20)]),
+      label: new FormControl(this.post.label, [Validators.required, Validators.maxLength(100)]),
       approved: new FormControl(this.post.approved),
       archived: new FormControl(this.post.archived),
       category: new FormControl(this.post.category.id, [Validators.required]),
