@@ -10,18 +10,18 @@
     "start-server-i": "nodemon -r dotenv/config --inspect server.js"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
     "express": "^4.17.1",
     "hammerjs": "^2.0.8",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.5",
-    "mongoose-unique-validator": "^2.0.3",
-    "bcryptjs": "^2.4.3",
-    "bcrypt": "3.0.0"
+    "mongoose-unique-validator": "^2.0.3"
   },
   "engines": {
-    "node": "10.x"
+    "node": "16.x"
   },
   "author": "Anshuman Borkakoti",
   "license": "ISC"

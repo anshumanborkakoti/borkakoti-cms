@@ -3,7 +3,11 @@ import { catchError } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ErrorComponent } from './error.component';
 import { throwError } from 'rxjs';
+import { Injectable } from '@angular/core';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(private dialog: MatDialog) { }
 
